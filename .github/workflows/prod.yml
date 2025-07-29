@@ -27,6 +27,10 @@ jobs:
       - name: NPM Install
         run: npm install
 
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE_PROD }}" > .env
+
       #   - name: Lint
       #     run: npm run lint
 
