@@ -1,7 +1,8 @@
-import { useReduxDispatch, useRedux } from "@/hooks/reduxHooks";
+import { useReduxDispatch } from "@/hooks/reduxHooks";
 import { AuthService } from "@/services/auth";
 import { setSession } from "@/storage/slices/session";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 interface ILoginForm {
   email: string;
@@ -10,7 +11,7 @@ interface ILoginForm {
 
 export const PageLogin = () => {
   const dispatch = useReduxDispatch();
-  const accessToken = useRedux((state) => state.session.accessToken);
+  const navigate = useNavigate();
 
   const loginForm = useForm<ILoginForm>({
     defaultValues: { email: "", password: "" },
@@ -23,6 +24,7 @@ export const PageLogin = () => {
       },
     } = await AuthService.login(loginForm.getValues());
     dispatch(setSession({ accessToken: jwt, user }));
+    navigate("/dashboard/categories");
   };
 
   return (

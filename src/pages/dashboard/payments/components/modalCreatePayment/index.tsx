@@ -68,6 +68,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
   };
 
   const getCategoryOptions = useCallback(async (searchBy?: string) => {
+    console.log(searchBy);
     const res = await CategoryService.getCategories({ page: 1, pageSize: 10 });
     return res.data.data.items.map((c) => ({
       label: c.label,
@@ -119,7 +120,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
             <Controller
               name="isOutcome"
               control={form.control}
-              render={({ field, fieldState: { error } }) => (
+              render={({ field }) => (
                 <div className="switch">
                   <span className="label">Gasto</span>
                   <Switch
@@ -221,7 +222,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
             <Controller
               name="tags"
               control={form.control}
-              render={({ field, fieldState: { error } }) => (
+              render={({ fieldState: { error } }) => (
                 <Select
                   disabled
                   label="Tags"
@@ -237,7 +238,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
           <Controller
             name="observation"
             control={form.control}
-            render={({ field, fieldState: { error } }) => (
+            render={({ field }) => (
               <Input placeholder="Digite aqui" {...field} label="Observação" />
             )}
           />

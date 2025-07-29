@@ -39,7 +39,7 @@ $modal-padding: variables.$modal-padding;
       min-width: 10rem;
       overflow: auto;
       padding: $modal-padding;
-      border-radius: 12px;
+      border-radius: 6px;
       box-shadow: 0.5rem 0.5rem 1rem 0.2rem rgba(colors.$neutral-7, 0.2);
 
       &.default-header {

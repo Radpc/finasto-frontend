@@ -1,2 +1,25 @@
+@use "/src/scss/colors" as colors;
+@use "/src/scss/mixins" as mixins;
 .page.payments {
+  main {
+    margin-block: 1rem;
+    border: 1px solid colors.$neutral-2;
+    padding-block: 1rem;
+
+    .above-table {
+      display: flex;
+      justify-content: space-between;
+
+      .filters {
+        display: flex;
+        justify-content: space-between;
+        padding-inline: 1rem;
+      }
+    }
+
+    table {
+      margin-block: 1rem;
+      @include mixins.table-inner-padding(1rem);
+    }
+  }
 }

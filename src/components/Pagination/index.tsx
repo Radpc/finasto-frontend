@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./_style.scss";
 
 import SvgArrowLeft from "@/assets/img/icons/ArrowLeft.svg?react";

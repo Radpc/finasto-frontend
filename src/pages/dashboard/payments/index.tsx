@@ -9,6 +9,8 @@ import {
   ModalCreatePayment,
 } from "./components/modalCreatePayment";
 import { formatDate, numberToCurrency } from "@/utils/formatters";
+import { Input } from "@/components/Input";
+import { KpiPayment } from "./components/kpiPayment";
 
 interface IPagination {
   page: number;
@@ -25,7 +27,7 @@ export const PagePayments = () => {
     page: 1,
     pageSize: 10,
   });
-  const [filters, setFilters] = useState<IFilters>({
+  const [filters] = useState<IFilters>({
     searchBy: "",
   });
 
@@ -35,6 +37,7 @@ export const PagePayments = () => {
 
   const fetchPayments = useCallback(
     async (pagination: IPagination, filters: IFilters) => {
+      console.log(filters);
       const { data } = await PaymentService.getPayments({
         page: pagination.page,
         pageSize: pagination.pageSize,
@@ -80,11 +83,20 @@ export const PagePayments = () => {
         onClose={() => setModalCreate({ visible: false })}
         onSubmit={onCreatePayment}
       />
-      <h1>Payments</h1>
-      <Button onClick={() => setModalCreate({ visible: true })}>
-        Create payment
-      </Button>
+      <h1>Pagamentos</h1>
+      <section className="kpis">
+        <KpiPayment label="Valor gasto" value="R$ 300" />
+      </section>
       <main>
+        <div className="above-table">
+          <div className="filters">
+            <Input noError label="Buscar" placeholder="Digite aqui" />
+          </div>
+
+          <Button onClick={() => setModalCreate({ visible: true })}>
+            Registrar pagamento
+          </Button>
+        </div>
         <table>
           <thead>
             <tr>
@@ -119,12 +131,12 @@ export const PagePayments = () => {
             )}
           </tbody>
         </table>
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={Math.ceil(totalItems / pagination.pageSize)}
+          onPageClick={(page) => setPagination((l) => ({ ...l, page }))}
+        />
       </main>
-      <Pagination
-        currentPage={pagination.page}
-        totalPages={Math.ceil(totalItems / pagination.pageSize)}
-        onPageClick={(page) => setPagination((l) => ({ ...l, page }))}
-      />
     </div>
   );
 };

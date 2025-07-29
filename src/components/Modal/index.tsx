@@ -50,7 +50,7 @@ const Modal = forwardRef<ModalReference, ModalProps>(
       };
     }, []);
 
-    const [confirmExitModal, setConfirmExitModal] = useState(false);
+    const [, setConfirmExitModal] = useState(false);
 
     const innerOnClose = () => {
       if (confirmExit) {

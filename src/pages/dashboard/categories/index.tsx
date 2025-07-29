@@ -23,7 +23,7 @@ export const PageCategories = () => {
     page: 1,
     pageSize: 10,
   });
-  const [filters, setFilters] = useState<IFilters>({
+  const [filters] = useState<IFilters>({
     searchBy: "",
   });
 
@@ -35,6 +35,7 @@ export const PageCategories = () => {
 
   const fetchCategories = useCallback(
     async (pagination: IPagination, filters: IFilters) => {
+      console.log(filters);
       const { data } = await CategoryService.getCategories({
         page: pagination.page,
         pageSize: pagination.pageSize,

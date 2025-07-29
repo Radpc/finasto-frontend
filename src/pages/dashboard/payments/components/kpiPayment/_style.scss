@@ -1,0 +1,19 @@
+@use "/src/scss/colors" as colors;
+.component.kpi-payment {
+  border: 1px solid colors.$neutral-3;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  padding: 0.4rem;
+  border-radius: 0.2rem;
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .value {
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+}
