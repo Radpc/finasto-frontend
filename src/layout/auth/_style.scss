@@ -1,0 +1,9 @@
+@use "/src/scss/colors" as colors;
+@use "/src/scss/global";
+
+.layout.auth {
+  min-height: 100vh;
+  > .page {
+    min-height: 100%;
+  }
+}

@@ -1,4 +1,5 @@
 import { useRedux } from "@/hooks/reduxHooks";
+import { LayoutAuth } from "@/layout/auth";
 import { LayoutDashboard } from "@/layout/dashboard";
 import { PageLogin } from "@/pages/auth/login";
 import { PageCategories } from "@/pages/dashboard/categories";
@@ -11,7 +12,7 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="auth">
+        <Route path="auth" element={<LayoutAuth />}>
           <Route path="login" element={<PageLogin />} />
         </Route>
         <Route path="dashboard" element={<LayoutDashboard />}>
