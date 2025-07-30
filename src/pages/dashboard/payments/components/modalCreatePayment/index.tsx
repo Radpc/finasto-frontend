@@ -13,6 +13,7 @@ import { paymentMethodsOptions } from "../../utils/paymentMethods";
 import { DateTime } from "luxon";
 import "./_style.scss";
 import { Switch } from "@/components/Switch";
+import { TagService } from "@/services/tag";
 
 export interface IPaymentForm {
   description: string;
@@ -68,8 +69,11 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
   };
 
   const getCategoryOptions = useCallback(async (searchBy?: string) => {
-    console.log(searchBy);
-    const res = await CategoryService.getCategories({ page: 1, pageSize: 10 });
+    const res = await CategoryService.getCategories({
+      page: 1,
+      pageSize: 10,
+      searchBy,
+    });
     return res.data.data.items.map((c) => ({
       label: c.label,
       value: c,
@@ -82,6 +86,25 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
   const categoryOptionsSWR = useSWR(
     "/category/?searchBy=" + categorySearchDebounce,
     () => getCategoryOptions(categorySearchDebounce)
+  );
+
+  const getTagOptions = useCallback(async (searchBy?: string) => {
+    const res = await TagService.getTags({
+      page: 1,
+      pageSize: 10,
+      searchBy,
+    });
+    return res.data.data.items.map((c) => ({
+      label: c.label,
+      value: c,
+    })) as Option<Tag>[];
+  }, []);
+
+  const [tagSearch, setTagSearch] = useState("");
+  const tagSearchDebounce = useDebounce(tagSearch);
+
+  const tagOptionsSWR = useSWR("/tags/?searchBy=" + tagSearchDebounce, () =>
+    getTagOptions(tagSearchDebounce)
   );
 
   const isOutcomeWatch = form.watch("isOutcome");
@@ -222,13 +245,18 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
             <Controller
               name="tags"
               control={form.control}
-              render={({ fieldState: { error } }) => (
+              render={({ fieldState: { error }, field }) => (
                 <Select
-                  disabled
+                  isSearchable
+                  compareBy={(c1, c2) => c1.id === c2.id}
+                  isMulti
+                  placeholder="Selecione"
                   label="Tags"
-                  // onChange={field.onChange}
-                  // value={field.value}
-                  options={[]}
+                  onChange={field.onChange}
+                  value={field.value}
+                  onSearch={(newSearch) => setTagSearch(newSearch)}
+                  optionsLoading={tagOptionsSWR.isLoading}
+                  options={tagOptionsSWR.data}
                   error={error?.message}
                 />
               )}

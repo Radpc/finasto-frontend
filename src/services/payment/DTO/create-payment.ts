@@ -1,6 +1,6 @@
 import { Payment } from "../../../types/apiTypes";
 
-type ExtraCreatePaymentDTO = { tagIds?: number[]; categoryId: number };
+type ExtraCreatePaymentDTO = { tagIds?: string[]; categoryId: string };
 
 type ICreatePaymentRemove = Pick<Payment, "category" | "tags">;
 

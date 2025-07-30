@@ -5,6 +5,7 @@ import { Category } from "@/types/apiTypes";
 interface IListCategoriesParams {
   page: number;
   pageSize: number;
+  searchBy?: string;
 }
 
 type ICreateCategoryRemove = Pick<Category, "id" | "createdAt" | "updatedAt">;

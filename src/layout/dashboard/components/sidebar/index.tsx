@@ -11,6 +11,7 @@ export const Sidebar = ({ className }: IProps) => {
       <nav>
         <Link to={"/dashboard/categories"}>Categories</Link>
         <Link to={"/dashboard/payments"}>Payments</Link>
+        <Link to={"/dashboard/tags"}>Tags</Link>
       </nav>
     </div>
   );

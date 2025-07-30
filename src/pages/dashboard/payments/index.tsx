@@ -11,6 +11,7 @@ import {
 import { formatDate, numberToCurrency } from "@/utils/formatters";
 import { Input } from "@/components/Input";
 import { KpiPayment } from "./components/kpiPayment";
+import { realToNumber } from "@/utils/money";
 
 interface IPagination {
   page: number;
@@ -67,7 +68,7 @@ export const PagePayments = () => {
         paymentDate: form.paymentDate,
         status: form.status,
         paymentMethod: form.paymentMethod,
-        value: parseFloat(form.value),
+        value: realToNumber(form.value) * (form.isOutcome ? -1 : 1),
         observation: form.observation,
         tagIds: form.tags.map((t) => t.id),
       });
@@ -100,10 +101,10 @@ export const PagePayments = () => {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Categoria</th>
-              <th>Valor</th>
               <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Tags</th>
+              <th>Valor</th>
               <th>Status</th>
               <th>Data do pagamento</th>
               <th>Adicionado em</th>
@@ -118,10 +119,10 @@ export const PagePayments = () => {
             ) : (
               paymentsSWR.data.map((c) => (
                 <tr key={"category_" + c.id}>
-                  <td>#{c.id}</td>
-                  <td>{c.category?.label}</td>
-                  <td>R$ {numberToCurrency(c.value)}</td>
                   <td>{c.description}</td>
+                  <td>{c.category?.label}</td>
+                  <td>{c.tags?.map((t) => t.label).join(", ") || "Sem tag"}</td>
+                  <td>R$ {numberToCurrency(c.value)}</td>
                   <td>{c.status}</td>
                   <td>{formatDate(c.paymentDate)}</td>
                   <td>{formatDate(c.createdAt)}</td>

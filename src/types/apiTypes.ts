@@ -19,14 +19,14 @@ export interface DatabaseDates {
 }
 
 export interface User extends DatabaseDates {
-  id: number;
+  id: string;
   email: string;
   name: string;
   role: UserRole;
 }
 
 export interface Payment extends DatabaseDates {
-  id: number;
+  id: string;
   description: string;
   value: number;
   observation?: string;
@@ -38,10 +38,11 @@ export interface Payment extends DatabaseDates {
 }
 
 export interface Category extends DatabaseDates {
-  id: number;
+  id: string;
   label: string;
 }
 
 export interface Tag extends DatabaseDates {
-  id: number;
+  id: string;
+  label: string;
 }
