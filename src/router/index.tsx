@@ -5,6 +5,7 @@ import { PageLogin } from "@/pages/auth/login";
 import { PageCategories } from "@/pages/dashboard/categories";
 import { PagePayments } from "@/pages/dashboard/payments";
 import { PageTags } from "@/pages/dashboard/tags";
+import { PageUsers } from "@/pages/dashboard/users";
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -19,6 +20,7 @@ export const AppRouter = () => {
           <Route path="payments" element={<PagePayments />} />
           <Route path="categories" element={<PageCategories />} />
           <Route path="tags" element={<PageTags />} />
+          <Route path="users" element={<PageUsers />} />
         </Route>
         <Route path="*" element={<Resolver />} />
       </Routes>

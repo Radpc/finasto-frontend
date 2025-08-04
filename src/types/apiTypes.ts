@@ -1,5 +1,6 @@
 export enum UserRole {
-  Admin = "admin",
+  FamilyHead = "familyHead",
+  FamilyMember = "familyMember",
 }
 
 export enum PaymentStatus {
