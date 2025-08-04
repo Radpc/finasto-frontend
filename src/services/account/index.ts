@@ -9,7 +9,9 @@ interface IListAccountsQuery {
 }
 
 type ICreateAccountRemove = Pick<Account, "id" | "createdAt" | "updatedAt">;
-type ICreateAccount = Omit<Account, keyof ICreateAccountRemove>;
+type ICreateAccountAdd = { familyId: string };
+type ICreateAccount = Omit<Account, keyof ICreateAccountRemove> &
+  ICreateAccountAdd;
 
 export class AccountService {
   static getAccounts(params: IListAccountsQuery) {

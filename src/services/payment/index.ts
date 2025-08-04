@@ -1,4 +1,4 @@
-import { Payment } from "@/types/apiTypes";
+import { Payment, PaymentStatus } from "@/types/apiTypes";
 import { API, getAuthorizedHeader } from "../../config/api";
 import { ICreatePaymentDTO } from "./DTO/create-payment";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
@@ -7,6 +7,15 @@ interface IListPaymentsParams {
   page: number;
   pageSize: number;
   searchBy?: string;
+  minValue?: number;
+  maxValue?: number;
+  since?: string;
+  until?: string;
+  categoryId?: string;
+  status?: PaymentStatus;
+  tagIds?: string[];
+  familyId?: string;
+  accountId?: string;
 }
 
 export class PaymentService {

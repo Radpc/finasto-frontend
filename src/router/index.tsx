@@ -2,6 +2,7 @@ import { useRedux } from "@/hooks/reduxHooks";
 import { LayoutAuth } from "@/layout/auth";
 import { LayoutDashboard } from "@/layout/dashboard";
 import { PageLogin } from "@/pages/auth/login";
+import { PageAccounts } from "@/pages/dashboard/accounts";
 import { PageCategories } from "@/pages/dashboard/categories";
 import { PagePayments } from "@/pages/dashboard/payments";
 import { PageTags } from "@/pages/dashboard/tags";
@@ -21,6 +22,7 @@ export const AppRouter = () => {
           <Route path="categories" element={<PageCategories />} />
           <Route path="tags" element={<PageTags />} />
           <Route path="users" element={<PageUsers />} />
+          <Route path="accounts" element={<PageAccounts />} />
         </Route>
         <Route path="*" element={<Resolver />} />
       </Routes>

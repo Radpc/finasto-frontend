@@ -14,19 +14,42 @@ import { KpiPayment } from "./components/kpiPayment";
 import { realToNumber } from "@/utils/money";
 import { useDebounce } from "@/hooks/useDebounce";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
-import { Tag } from "@/types/apiTypes";
+import { Account, Category, Family, Tag } from "@/types/apiTypes";
 import { translatePaymentStatus } from "@/utils/translation";
+import { Option, Select } from "@/components/Select";
+import { useAccounts } from "@/hooks/swrHooks/useAccounts";
+import { useCategories } from "@/hooks/swrHooks/useCategories";
+import { useTags } from "@/hooks/swrHooks/useTags";
+import { useRedux } from "@/hooks/reduxHooks";
 
 interface IPagination {
   page: number;
   pageSize: number;
 }
 
+enum PaymentDirection {
+  Income = "Ganho",
+  Outcome = "Gasto",
+}
+
+const paymentDirectionOptions: Option<PaymentDirection>[] = [
+  PaymentDirection.Income,
+  PaymentDirection.Outcome,
+].map((e) => ({ label: e, value: e }));
+
 interface IFilters {
   searchBy: string;
+  tags?: Tag[];
+  account?: Account;
+  category?: Category;
+  since?: string;
+  until?: string;
+  paymentDirection?: PaymentDirection;
 }
 
 export const PagePayments = () => {
+  const currentFamily = useRedux((s) => s.session.selectedFamily);
+
   const [totalItems, setTotalItems] = useState(0);
   const [pagination, setPagination] = useState<IPagination>({
     page: 1,
@@ -50,9 +73,17 @@ export const PagePayments = () => {
     async (pagination: IPagination, filters: IFilters) => {
       console.log(filters);
       const { data } = await PaymentService.getPayments({
+        familyId: currentFamily?.id,
         page: pagination.page,
         pageSize: pagination.pageSize,
         searchBy: filters.searchBy,
+        accountId: filters.account?.id,
+        categoryId: filters.category?.id,
+        tagIds: filters.tags?.map((t) => t.id),
+        maxValue:
+          filters.paymentDirection === PaymentDirection.Outcome ? 0 : undefined,
+        minValue:
+          filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
       });
 
       const res = data.data;
@@ -91,6 +122,18 @@ export const PagePayments = () => {
     }
   };
 
+  const [rawSearchAccount, setRawSearchAccount] = useState("");
+  const debounceRawSearchAccount = useDebounce(rawSearchAccount);
+  const accounts = useAccounts({ searchBy: debounceRawSearchAccount });
+
+  const [rawSearchCategory, setRawSearchCategory] = useState("");
+  const debounceRawSearchCategory = useDebounce(rawSearchCategory);
+  const categories = useCategories({ searchBy: debounceRawSearchCategory });
+
+  const [rawSearchTag, setRawSearchTag] = useState("");
+  const debounceRawSearchTag = useDebounce(rawSearchTag);
+  const tags = useTags({ searchBy: debounceRawSearchTag });
+
   return (
     <div className="page payments">
       <ModalCreatePayment
@@ -111,6 +154,65 @@ export const PagePayments = () => {
               noError
               label="Buscar"
               placeholder="Digite aqui"
+              className="filter"
+            />
+            <Select
+              className="filter"
+              label="Conta"
+              placeholder="Selecione"
+              compareBy={(a, b) => a?.id === b?.id}
+              onChange={(account) => setFilters((f) => ({ ...f, account }))}
+              isSearchable
+              onSearch={(raw) => setRawSearchAccount(raw)}
+              value={filters.account}
+              optionsLoading={accounts.isLoading}
+              options={accounts.options}
+              clearable
+              noError
+            />
+
+            <Select
+              className="filter"
+              label="Categoria"
+              placeholder="Selecione"
+              compareBy={(a, b) => a?.id === b?.id}
+              onChange={(category) => setFilters((f) => ({ ...f, category }))}
+              isSearchable
+              onSearch={(raw) => setRawSearchCategory(raw)}
+              value={filters.category}
+              optionsLoading={categories.isLoading}
+              options={categories.options}
+              clearable
+              noError
+            />
+
+            <Select
+              className="filter"
+              label="Tags"
+              placeholder="Selecione"
+              isMulti
+              compareBy={(a, b) => a?.id === b?.id}
+              onChange={(tags) => setFilters((f) => ({ ...f, tags }))}
+              isSearchable
+              onSearch={(raw) => setRawSearchTag(raw)}
+              value={filters.tags}
+              optionsLoading={tags.isLoading}
+              options={tags.options}
+              clearable
+              noError
+            />
+
+            <Select
+              noError
+              className="filter"
+              label="Tipo de pagamento"
+              placeholder="Selecione"
+              clearable
+              options={paymentDirectionOptions}
+              value={filters.paymentDirection}
+              onChange={(paymentDirection) =>
+                setFilters((f) => ({ ...f, paymentDirection }))
+              }
             />
           </div>
 
