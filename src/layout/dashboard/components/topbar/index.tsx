@@ -12,7 +12,7 @@ interface IProps {
   className?: string;
 }
 
-export const Topbar = ({ user, className }: IProps) => {
+export const Topbar = ({ className }: IProps) => {
   return (
     <div className={"component topbar " + (className ?? "")}>
       <div className="left-side"></div>
