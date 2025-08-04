@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import "./_style.scss";
 import { PaymentService } from "@/services/payment";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import useSWR from "swr";
 import Pagination from "@/components/Pagination";
 import {
@@ -12,6 +12,10 @@ import { formatDate, numberToCurrency } from "@/utils/formatters";
 import { Input } from "@/components/Input";
 import { KpiPayment } from "./components/kpiPayment";
 import { realToNumber } from "@/utils/money";
+import { useDebounce } from "@/hooks/useDebounce";
+import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
+import { Tag } from "@/types/apiTypes";
+import { translatePaymentStatus } from "@/utils/translation";
 
 interface IPagination {
   page: number;
@@ -28,9 +32,15 @@ export const PagePayments = () => {
     page: 1,
     pageSize: 10,
   });
-  const [filters] = useState<IFilters>({
+  const [filters, setFilters] = useState<IFilters>({
     searchBy: "",
   });
+
+  const [searchByRaw, setSearchByRaw] = useState("");
+  const debounceSearchRaw = useDebounce(searchByRaw);
+  useEffect(() => {
+    setFilters((l) => ({ ...l, searchBy: debounceSearchRaw }));
+  }, [debounceSearchRaw]);
 
   const paymentsSWRKey = useMemo(() => {
     return `/payments/${JSON.stringify(filters)}&${JSON.stringify(pagination)}`;
@@ -42,6 +52,7 @@ export const PagePayments = () => {
       const { data } = await PaymentService.getPayments({
         page: pagination.page,
         pageSize: pagination.pageSize,
+        searchBy: filters.searchBy,
       });
 
       const res = data.data;
@@ -94,7 +105,13 @@ export const PagePayments = () => {
       <main>
         <div className="above-table">
           <div className="filters">
-            <Input noError label="Buscar" placeholder="Digite aqui" />
+            <Input
+              value={searchByRaw}
+              onChange={(e) => setSearchByRaw(e.target.value)}
+              noError
+              label="Buscar"
+              placeholder="Digite aqui"
+            />
           </div>
 
           <Button onClick={() => setModalCreate({ visible: true })}>
@@ -105,9 +122,9 @@ export const PagePayments = () => {
           <thead>
             <tr>
               <th>Descrição</th>
+              <th>Valor</th>
               <th>Categoria</th>
               <th>Tags</th>
-              <th>Valor</th>
               <th>Status</th>
               <th>Data do pagamento</th>
               <th>Adicionado em</th>
@@ -120,15 +137,34 @@ export const PagePayments = () => {
             ) : paymentsSWR.error || !paymentsSWR.data ? (
               <tr>Error</tr>
             ) : (
-              paymentsSWR.data.map((c) => (
-                <tr key={"category_" + c.id}>
-                  <td>{c.description}</td>
-                  <td>{c.category?.label}</td>
-                  <td>{c.tags?.map((t) => t.label).join(", ") || "Sem tag"}</td>
-                  <td>R$ {numberToCurrency(c.value)}</td>
-                  <td>{c.status}</td>
-                  <td>{formatDate(c.paymentDate)}</td>
-                  <td>{formatDate(c.createdAt)}</td>
+              paymentsSWR.data.map((p) => (
+                <tr key={"payment_" + p.id}>
+                  <td>{p.description}</td>
+                  <td>
+                    <div className="price-label">
+                      <SvgChevronDown
+                        className={p.value < 0 ? "red" : "green"}
+                      />
+                      <span>R$ {numberToCurrency(Math.abs(p.value))}</span>
+                    </div>
+                  </td>
+                  <td>{p.category?.label}</td>
+                  <td>
+                    {!p.tags || p.tags.length === 0 ? (
+                      <span>Sem tags</span>
+                    ) : (
+                      p.tags?.map((t) => (
+                        <PaymentTagLabel
+                          tag={t}
+                          key={"t_" + p.id + "_" + t.id}
+                        />
+                      ))
+                    )}
+                  </td>
+
+                  <td>{translatePaymentStatus[p.status]}</td>
+                  <td>{formatDate(p.paymentDate)}</td>
+                  <td>{formatDate(p.createdAt)}</td>
                   <td>Actions</td>
                 </tr>
               ))
@@ -143,4 +179,12 @@ export const PagePayments = () => {
       </main>
     </div>
   );
+};
+
+interface IProps {
+  tag: Tag;
+}
+
+const PaymentTagLabel = ({ tag }: IProps) => {
+  return <div className="component payment-tag-label">{tag.label}</div>;
 };

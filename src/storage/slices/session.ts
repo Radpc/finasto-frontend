@@ -51,5 +51,6 @@ export const sessionSlice = createSlice({
   },
 });
 
-export const { setSession, unsetSession, updateTokens } = sessionSlice.actions;
+export const { setSession, unsetSession, setSelectedFamily, updateTokens } =
+  sessionSlice.actions;
 export const { reducer: sessionReducer } = sessionSlice;

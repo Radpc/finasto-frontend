@@ -1,9 +1,10 @@
 import Pagination from "@/components/Pagination";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import { ITagForm, ModalCreateTag } from "./components/modalCreateTag";
 import { Button } from "@/components/Button";
 import { TagService } from "@/services/tag";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface IPagination {
   page: number;

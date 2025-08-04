@@ -10,6 +10,18 @@ $background-color: colors.$neutral-1;
   font-size: 0.9rem;
   position: relative;
 
+  &:has(:focus) {
+    .select-input {
+      outline: none;
+    }
+    .select-label {
+      color: colors.$primary-1;
+    }
+    .select-input {
+      border-color: colors.$primary-1;
+    }
+  }
+
   .select-label {
     position: absolute;
     top: 0;

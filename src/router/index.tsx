@@ -12,32 +12,72 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="auth" element={<LayoutAuth />}>
+        <Route path="auth" element={loggedOut(<LayoutAuth />)}>
           <Route path="login" element={<PageLogin />} />
         </Route>
-        <Route path="dashboard" element={<LayoutDashboard />}>
+        <Route path="dashboard" element={loggedIn(<LayoutDashboard />)}>
           <Route path="payments" element={<PagePayments />} />
           <Route path="categories" element={<PageCategories />} />
           <Route path="tags" element={<PageTags />} />
         </Route>
-        <Route path="*" element={<DefaultResolver />} />
+        <Route path="*" element={<Resolver />} />
       </Routes>
     </BrowserRouter>
   );
 };
 
-const DefaultResolver = () => {
+interface IProps {
+  children?: React.ReactNode;
+}
+
+const Resolver = ({ children }: IProps) => {
+  const loggedIn = useRedux((state) => !!state.session.user);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loggedIn) {
+      navigate("/auth/login");
+    } else {
+      navigate("/dashboard/payments");
+    }
+  }, [loggedIn, navigate]);
+
+  return children;
+};
+
+const PrivateRoute = ({ children }: IProps) => {
+  const loggedIn = useRedux((state) => !!state.session.user);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loggedIn) {
+      navigate("/auth/login");
+    }
+  }, [loggedIn, navigate]);
+
+  return children;
+};
+
+const PublicRoute = ({ children }: IProps) => {
   const loggedIn = useRedux((state) => !!state.session.user);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loggedIn) {
-      navigate("/dashboard/categories");
-    } else {
-      navigate("/auth/login");
+      navigate("/dashboard/payments");
     }
   }, [loggedIn, navigate]);
 
-  return <div />;
+  return children;
 };
+
+const loggedIn = (element: React.ReactNode) => (
+  <PrivateRoute>{element}</PrivateRoute>
+);
+
+const loggedOut = (element: React.ReactNode) => (
+  <PublicRoute>{element}</PublicRoute>
+);

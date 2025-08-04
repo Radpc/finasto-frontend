@@ -20,6 +20,46 @@
     table {
       margin-block: 1rem;
       @include mixins.table-inner-padding(1rem);
+
+      tr:has(td .price-label svg.red):hover {
+        background-color: rgba(colors.$secondary-2, 0.1);
+      }
+
+      tr:has(td .price-label svg.green):hover {
+        background-color: rgba(colors.$secondary-5, 0.1);
+      }
+
+      td .price-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        > svg {
+          height: 1rem;
+          width: 1rem;
+
+          &.red {
+            path {
+              fill: colors.$secondary-2;
+            }
+          }
+
+          &.green {
+            rotate: 180deg;
+            path {
+              fill: colors.$secondary-5;
+            }
+          }
+        }
+      }
     }
   }
+}
+
+.component.payment-tag-label {
+  border: 1px solid colors.$neutral-9;
+  display: inline;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.6rem;
+  font-weight: 600;
+  background-color: colors.$primary-1;
 }

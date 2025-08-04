@@ -3,6 +3,13 @@ $circle-size: 1.2rem;
 $switch-circle-margin: 3px;
 
 .component-switch {
+  input {
+    display: none;
+    &:focus {
+      outline: none;
+    }
+  }
+
   .switch {
     position: relative;
     width: 2.5rem;

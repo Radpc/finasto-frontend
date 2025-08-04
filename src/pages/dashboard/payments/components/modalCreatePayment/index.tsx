@@ -119,6 +119,10 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const isOutcomeWatch = form.watch("isOutcome");
 
+  useEffect(() => {
+    form.setFocus("account");
+  }, [visible]);
+
   return (
     <Modal
       className="modal create-payment"
@@ -137,10 +141,9 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
               rules={{ required: "Campo necessário" }}
               render={({ field, fieldState: { error } }) => (
                 <Select
-                  value={field.value}
+                  {...field}
                   label="Conta"
                   compareBy={(a, b) => a.id === b.id}
-                  onChange={field.onChange}
                   options={accounts.options}
                   error={error?.message}
                 />
