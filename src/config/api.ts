@@ -10,6 +10,7 @@ API.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401) {
+      console.log("Unset");
       externalUnsetSession();
     }
     return Promise.reject(error);

@@ -1,32 +1,36 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../types/apiTypes";
+import { Family, User } from "../../types/apiTypes";
 
 interface SessionState {
   createdAt?: string;
   accessToken?: string;
   user?: User;
+  selectedFamily?: Family;
 }
 
 const initialState: SessionState = {};
+
+type SessionPayload = PayloadAction<{
+  user: User;
+  accessToken: string;
+  family?: Family;
+}>;
+type SelectedFamilyPayload = PayloadAction<{ family: Family }>;
 
 export const sessionSlice = createSlice({
   name: "session",
   initialState,
   reducers: {
-    setSession: (
-      _state,
-      {
-        payload,
-      }: PayloadAction<{
-        user: User;
-        accessToken: string;
-      }>
-    ) => {
+    setSession: (_state, { payload }: SessionPayload) => {
       return {
         createdAt: new Date().toISOString(),
         accessToken: payload.accessToken,
         user: payload.user,
+        selectedFamily: payload.family,
       };
+    },
+    setSelectedFamily: (state, { payload }: SelectedFamilyPayload) => {
+      return { ...state, selectedFamily: payload.family };
     },
     updateTokens: (
       state,

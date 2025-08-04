@@ -52,10 +52,15 @@ export const PageTags = () => {
 
   const onCreateTag = async (form: ITagForm) => {
     try {
-      await TagService.createTag({ label: form.label });
+      await TagService.createTag({
+        label: form.label,
+        familyId: form.family.id,
+      });
       setModalCreate({ visible: false });
       tagsSWR.mutate();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

@@ -6,6 +6,7 @@ import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
 interface IListPaymentsParams {
   page: number;
   pageSize: number;
+  searchBy?: string;
 }
 
 export class PaymentService {

@@ -63,6 +63,7 @@ export const PagePayments = () => {
   const onCreatePayment = async (form: IPaymentForm) => {
     try {
       await PaymentService.createPayment({
+        accountId: form.account.id,
         categoryId: form.category.id,
         description: form.description,
         paymentDate: form.paymentDate,
@@ -74,7 +75,9 @@ export const PagePayments = () => {
       });
       setModalCreate({ visible: false });
       paymentsSWR.mutate();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

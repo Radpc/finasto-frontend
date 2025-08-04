@@ -26,7 +26,10 @@ export const PageLogin = () => {
         data: { user, jwt },
       },
     } = await AuthService.login(form);
-    dispatch(setSession({ accessToken: jwt, user }));
+    console.log(user);
+    dispatch(
+      setSession({ accessToken: jwt, user, family: user.families?.[0] })
+    );
     navigate("/dashboard/categories");
   });
 

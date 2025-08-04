@@ -4,7 +4,13 @@ import Modal, { ModalProps } from "@/components/Modal";
 import { Select, Option } from "@/components/Select";
 import { useDebounce } from "@/hooks/useDebounce";
 import { CategoryService } from "@/services/category";
-import { Category, PaymentMethod, PaymentStatus, Tag } from "@/types/apiTypes";
+import {
+  Account,
+  Category,
+  PaymentMethod,
+  PaymentStatus,
+  Tag,
+} from "@/types/apiTypes";
 import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -14,9 +20,11 @@ import { DateTime } from "luxon";
 import "./_style.scss";
 import { Switch } from "@/components/Switch";
 import { TagService } from "@/services/tag";
+import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 
 export interface IPaymentForm {
   description: string;
+  account: Account;
   isOutcome: boolean;
   value: string;
   category: Category;
@@ -52,6 +60,8 @@ const formatISOToInputDate = (iso: string) => {
 };
 
 export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
+  const accounts = useAccounts();
+
   const form = useForm<IPaymentForm>({ defaultValues: defaultCategoryForm });
   useEffect(() => {
     form.reset();
@@ -120,6 +130,23 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
       </header>
       <main>
         <form onSubmit={form.handleSubmit(innerOnSubmit)}>
+          <div>
+            <Controller
+              name="account"
+              control={form.control}
+              rules={{ required: "Campo necessário" }}
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  value={field.value}
+                  label="Conta"
+                  compareBy={(a, b) => a.id === b.id}
+                  onChange={field.onChange}
+                  options={accounts.options}
+                  error={error?.message}
+                />
+              )}
+            />
+          </div>
           <div className="price-section">
             <Controller
               name="value"

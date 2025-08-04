@@ -9,7 +9,8 @@ interface IListTagsQuery {
 }
 
 type ICreateTagRemove = Pick<Tag, "id" | "createdAt" | "updatedAt">;
-type ICreateTag = Omit<Tag, keyof ICreateTagRemove>;
+type ICreateTagAdd = { familyId: string };
+type ICreateTag = Omit<Tag, keyof ICreateTagRemove> & ICreateTagAdd;
 
 export class TagService {
   static getTags(params: IListTagsQuery) {

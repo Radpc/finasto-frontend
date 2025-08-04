@@ -23,6 +23,8 @@ export interface User extends DatabaseDates {
   email: string;
   name: string;
   role: UserRole;
+
+  families?: Family[];
 }
 
 export interface Payment extends DatabaseDates {
@@ -35,6 +37,16 @@ export interface Payment extends DatabaseDates {
   paymentMethod: PaymentMethod;
   category?: Category;
   tags?: Tag[];
+}
+
+export interface Family extends DatabaseDates {
+  id: string;
+  name: string;
+}
+
+export interface Account extends DatabaseDates {
+  id: string;
+  name: string;
 }
 
 export interface Category extends DatabaseDates {

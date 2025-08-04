@@ -9,7 +9,9 @@ interface IListCategoriesParams {
 }
 
 type ICreateCategoryRemove = Pick<Category, "id" | "createdAt" | "updatedAt">;
-type ICreateCategory = Omit<Category, keyof ICreateCategoryRemove>;
+type ICreateCategoryAdd = { familyId: string };
+type ICreateCategory = Omit<Category, keyof ICreateCategoryRemove> &
+  ICreateCategoryAdd;
 
 export class CategoryService {
   static getCategories(params: IListCategoriesParams) {

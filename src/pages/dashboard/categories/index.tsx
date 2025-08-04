@@ -59,10 +59,15 @@ export const PageCategories = () => {
 
   const onCreateCategory = async (form: ICategoryForm) => {
     try {
-      await CategoryService.createCategory({ label: form.label });
+      await CategoryService.createCategory({
+        label: form.label,
+        familyId: form.family.id,
+      });
       setModalCreate({ visible: false });
       categoriesSWR.mutate();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
