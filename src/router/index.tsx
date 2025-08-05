@@ -5,6 +5,7 @@ import { PageLogin } from "@/pages/auth/login";
 import { PageAccounts } from "@/pages/dashboard/accounts";
 import { PageCategories } from "@/pages/dashboard/categories";
 import { PagePayments } from "@/pages/dashboard/payments";
+import { PageRecurringPayments } from "@/pages/dashboard/recurring-payments";
 import { PageTags } from "@/pages/dashboard/tags";
 import { PageUsers } from "@/pages/dashboard/users";
 import { useEffect } from "react";
@@ -23,6 +24,10 @@ export const AppRouter = () => {
           <Route path="tags" element={<PageTags />} />
           <Route path="users" element={<PageUsers />} />
           <Route path="accounts" element={<PageAccounts />} />
+          <Route
+            path="recurring-payments"
+            element={<PageRecurringPayments />}
+          />
         </Route>
         <Route path="*" element={<Resolver />} />
       </Routes>

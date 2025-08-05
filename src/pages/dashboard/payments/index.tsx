@@ -11,7 +11,7 @@ import {
 import { formatDate, numberToCurrency } from "@/utils/formatters";
 import { Input } from "@/components/Input";
 import { KpiPayment } from "./components/kpiPayment";
-import { realToNumber } from "@/utils/money";
+import { currencyToNumber } from "@/utils/money";
 import { useDebounce } from "@/hooks/useDebounce";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
 import { Account, Category, Tag } from "@/types/apiTypes";
@@ -111,7 +111,7 @@ export const PagePayments = () => {
         paymentDate: form.paymentDate,
         status: form.status,
         paymentMethod: form.paymentMethod,
-        value: realToNumber(form.value) * (form.isOutcome ? -1 : 1),
+        value: currencyToNumber(form.value) * (form.isOutcome ? -1 : 1),
         observation: form.observation,
         tagIds: form.tags.map((t) => t.id),
       });

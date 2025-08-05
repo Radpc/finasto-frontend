@@ -1,5 +1,5 @@
-@use 'src/scss/colors' as colors;
-@use 'src/scss/animations' as animations;
+@use "@/scss/colors" as colors;
+@use "@/scss/animations" as animations;
 
 $card-padding: 0.5rem;
 $box-size: 0.6rem;
@@ -59,7 +59,7 @@ $card-radius: 0.6rem;
   }
 
   &::after {
-    content: '';
+    content: "";
     height: $box-size;
     width: $box-size;
     background-color: colors.$neutral-1;

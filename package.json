@@ -20,10 +20,12 @@
     "react-number-format": "^5.4.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.3",
+    "react-text-mask": "^5.5.0",
     "react-transition-group": "^4.4.5",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "swr": "^2.3.4",
+    "text-mask-addons": "^3.8.0",
     "vite-plugin-svgr": "^4.3.0"
   },
   "devDependencies": {
@@ -31,6 +33,7 @@
     "@types/luxon": "^3.6.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/react-text-mask": "^5.4.14",
     "@types/react-transition-group": "^4.4.12",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "eslint": "^9.22.0",

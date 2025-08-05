@@ -42,7 +42,6 @@ const defaultCategoryForm: Partial<IPaymentForm> = {
   observation: "",
   paymentMethod: PaymentMethod.Credit,
   status: PaymentStatus.Paid,
-  paymentDate: new Date().toISOString(),
   tags: [],
   value: "0",
 };
@@ -119,7 +118,13 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const isOutcomeWatch = form.watch("isOutcome");
 
+  const clearForm = () => {
+    form.reset();
+    form.reset({ paymentDate: new Date().toISOString() });
+  };
+
   useEffect(() => {
+    clearForm();
     form.setFocus("account");
   }, [visible]);
 

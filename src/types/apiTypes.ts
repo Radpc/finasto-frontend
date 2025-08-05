@@ -59,3 +59,18 @@ export interface Tag extends DatabaseDates {
   id: string;
   label: string;
 }
+
+export interface RecurringPayment extends DatabaseDates {
+  id: string;
+  description: string;
+  paymentMethod: PaymentMethod;
+  totalValue?: number;
+  automaticPayment: boolean;
+  singlePaymentValue: number;
+  numberOfInstallments?: number;
+  dayOfMonth: number;
+
+  payments?: Payment[];
+  account?: Account;
+  category?: Category;
+}
