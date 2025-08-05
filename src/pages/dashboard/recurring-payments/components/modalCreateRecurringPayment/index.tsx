@@ -6,7 +6,7 @@ import { Switch } from "@/components/Switch";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
 import { paymentMethodsOptions } from "@/pages/dashboard/payments/utils/paymentMethods";
-import { Account, Category, PaymentMethod } from "@/types/apiTypes";
+import { Account, Category, PaymentMethod, Tag } from "@/types/apiTypes";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "./_style.scss";
@@ -15,10 +15,12 @@ import { maskInt } from "@/utils/masks";
 import { currencyToNumber } from "@/utils/money";
 import { numberToCurrency } from "@/utils/formatters";
 import { DateTime } from "luxon";
+import { useTags } from "@/hooks/swrHooks/useTags";
 
 export interface IRecurringPaymentForm {
   account: Account;
   category: Category;
+  tags: Tag[];
   description: string;
   paymentMethod: PaymentMethod;
   totalValue?: string;
@@ -61,6 +63,8 @@ export const ModalCreateRecurringPayment = ({
 }: IProps) => {
   const accounts = useAccounts();
   const categories = useCategories();
+  const tags = useTags();
+
   const form = useForm<IRecurringPaymentForm>({
     defaultValues: defaultRecurringPaymentForm,
   });
@@ -215,23 +219,42 @@ export const ModalCreateRecurringPayment = ({
             />
           </div>
 
-          <Controller
-            name="startFromDate"
-            control={form.control}
-            rules={{ required: "Campo necessário" }}
-            render={({ field, fieldState: { error } }) => (
-              <Input
-                {...field}
-                type="datetime-local"
-                onChange={(e) =>
-                  field.onChange(formatInputDateToISO(e.target.value))
-                }
-                error={error?.message}
-                value={formatISOToInputDate(field.value || "")}
-                label="Data de início do pagamento"
-              />
-            )}
-          />
+          <div className="line">
+            <Controller
+              name="startFromDate"
+              control={form.control}
+              rules={{ required: "Campo necessário" }}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  type="datetime-local"
+                  onChange={(e) =>
+                    field.onChange(formatInputDateToISO(e.target.value))
+                  }
+                  error={error?.message}
+                  value={formatISOToInputDate(field.value || "")}
+                  label="Início do pagamento"
+                />
+              )}
+            />
+            <Controller
+              name="tags"
+              control={form.control}
+              rules={{ required: "Campo necessário" }}
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  {...field}
+                  isMulti
+                  compareBy={(a, b) => a?.id === b?.id}
+                  isSearchable
+                  options={tags.options}
+                  value={field.value}
+                  error={error?.message}
+                  label="Tags"
+                />
+              )}
+            />
+          </div>
 
           <h5>
             Valor total <small>Opcional</small>

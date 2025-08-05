@@ -4,6 +4,7 @@ type ExtraCreateRecurrentPaymentDTO = {
   categoryId: string;
   accountId: string;
   startDateFrom?: string;
+  tagIds?: string[];
 };
 
 type ICreateRecurrentPaymentRemove = Pick<
