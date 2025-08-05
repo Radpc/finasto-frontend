@@ -14,7 +14,7 @@ import { KpiPayment } from "./components/kpiPayment";
 import { realToNumber } from "@/utils/money";
 import { useDebounce } from "@/hooks/useDebounce";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
-import { Account, Category, Family, Tag } from "@/types/apiTypes";
+import { Account, Category, Tag } from "@/types/apiTypes";
 import { translatePaymentStatus } from "@/utils/translation";
 import { Option, Select } from "@/components/Select";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";

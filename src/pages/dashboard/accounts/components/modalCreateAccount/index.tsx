@@ -3,7 +3,7 @@ import { Input } from "@/components/Input";
 import Modal, { ModalProps } from "@/components/Modal";
 import { Select } from "@/components/Select";
 import { useFamilies } from "@/hooks/swrHooks/useFamilies";
-import { Family, UserRole } from "@/types/apiTypes";
+import { Family } from "@/types/apiTypes";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
