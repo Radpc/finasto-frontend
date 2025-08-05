@@ -9,11 +9,11 @@ export const Sidebar = ({ className }: IProps) => {
   return (
     <div className={"component sidebar " + (className ?? "")}>
       <nav>
-        <Link to={"/dashboard/categories"}>Categories</Link>
-        <Link to={"/dashboard/payments"}>Payments</Link>
+        <Link to={"/dashboard/categories"}>Categorias</Link>
+        <Link to={"/dashboard/payments"}>Pagamentos</Link>
         <Link to={"/dashboard/tags"}>Tags</Link>
-        <Link to={"/dashboard/users"}>Users</Link>
-        <Link to={"/dashboard/accounts"}>Accounts</Link>
+        <Link to={"/dashboard/users"}>Usuários</Link>
+        <Link to={"/dashboard/accounts"}>Contas</Link>
       </nav>
     </div>
   );

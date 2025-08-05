@@ -37,11 +37,13 @@ export const ModalCreateCategory = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-category"
+      className="modal create-category default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
-      <h1>Create category</h1>
+      <header>
+        <h1>Criar categoria</h1>
+      </header>
       <form onSubmit={form.handleSubmit(innerOnSubmit)}>
         <Controller
           name="family"
@@ -61,12 +63,19 @@ export const ModalCreateCategory = ({ onClose, visible, onSubmit }: IProps) => {
         <Controller
           name="label"
           control={form.control}
-          render={({ field }) => <Input {...field} label="Label" />}
+          render={({ field }) => (
+            <Input placeholder="Digite aqui" {...field} label="Label" />
+          )}
         />
-        <Button disabled={loading} buttonType="submit">
-          Create category
-        </Button>
       </form>
+      <footer>
+        <Button outlined disabled={loading} onClick={innerOnClose}>
+          Cancelar
+        </Button>
+        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+          Criar categoria
+        </Button>
+      </footer>
     </Modal>
   );
 };

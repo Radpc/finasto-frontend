@@ -125,12 +125,12 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-payment"
+      className="modal create-payment default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
       <header>
-        <p className="title">Registrar pagamento</p>
+        <h1 className="title">Registrar pagamento</h1>
       </header>
       <main>
         <form onSubmit={form.handleSubmit(innerOnSubmit)}>

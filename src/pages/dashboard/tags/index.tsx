@@ -72,7 +72,7 @@ export const PageTags = () => {
       />
       <h1>Tags</h1>
       <Button onClick={() => setModalCreate({ visible: true })}>
-        Create tag
+        Criar tag
       </Button>
       <main>
         <table>

@@ -75,16 +75,16 @@ export const PageUsers = () => {
       />
       <h1>Users</h1>
       <Button onClick={() => setModalCreate({ visible: true })}>
-        Create user
+        Criar usuário
       </Button>
       <main>
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
-              <th>Created at</th>
-              <th>Actions</th>
+              <th>Nome</th>
+              <th>Criado em</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>

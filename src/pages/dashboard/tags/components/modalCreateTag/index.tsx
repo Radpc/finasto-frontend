@@ -38,36 +38,47 @@ export const ModalCreateTag = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-tag"
+      className="modal create-tag default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
-      <h1>Create tag</h1>
-      <form onSubmit={form.handleSubmit(innerOnSubmit)}>
-        <Controller
-          name="family"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              value={field.value}
-              label="Família"
-              compareBy={(a, b) => a.id === b.id}
-              onChange={field.onChange}
-              options={families.options}
-              error={error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="label"
-          control={form.control}
-          render={({ field }) => <Input {...field} label="Label" />}
-        />
-        <Button disabled={loading} buttonType="submit">
-          Create tag
+      <header>
+        <h1>Criar tag</h1>
+      </header>
+      <main>
+        <form onSubmit={form.handleSubmit(innerOnSubmit)}>
+          <Controller
+            name="family"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field, fieldState: { error } }) => (
+              <Select
+                value={field.value}
+                label="Família"
+                compareBy={(a, b) => a.id === b.id}
+                onChange={field.onChange}
+                options={families.options}
+                error={error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="label"
+            control={form.control}
+            render={({ field }) => (
+              <Input placeholder="Digite aqui" {...field} label="Label" />
+            )}
+          />
+        </form>
+      </main>
+      <footer>
+        <Button outlined disabled={loading} onClick={innerOnClose}>
+          Cancelar
         </Button>
-      </form>
+        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+          Criar tag
+        </Button>
+      </footer>
     </Modal>
   );
 };

@@ -44,51 +44,70 @@ export const ModalCreateUser = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-user"
+      className="modal create-user default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
-      <h1>Create user</h1>
-      <form onSubmit={form.handleSubmit(innerOnSubmit)}>
-        <Controller
-          name="family"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              value={field.value}
-              label="Família"
-              compareBy={(a, b) => a.id === b.id}
-              onChange={field.onChange}
-              options={families.options}
-              error={error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="name"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field }) => <Input {...field} label="Nome" />}
-        />
-        <Controller
-          name="email"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field }) => <Input {...field} label="E-mail" />}
-        />
-        <Controller
-          name="password"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field }) => (
-            <Input {...field} label="Password" type="password" />
-          )}
-        />
-        <Button disabled={loading} buttonType="submit">
-          Create user
+      <header>
+        <h1>Criar usuário</h1>
+      </header>
+
+      <main>
+        <form onSubmit={form.handleSubmit(innerOnSubmit)}>
+          <Controller
+            name="family"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field, fieldState: { error } }) => (
+              <Select
+                value={field.value}
+                label="Família"
+                compareBy={(a, b) => a.id === b.id}
+                onChange={field.onChange}
+                options={families.options}
+                error={error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="name"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field }) => (
+              <Input placeholder="Digite aqui" {...field} label="Nome" />
+            )}
+          />
+          <Controller
+            name="email"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field }) => (
+              <Input placeholder="Digite aqui" {...field} label="E-mail" />
+            )}
+          />
+          <Controller
+            name="password"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field }) => (
+              <Input
+                placeholder="Digite aqui"
+                {...field}
+                label="Password"
+                type="password"
+              />
+            )}
+          />
+        </form>
+      </main>
+      <footer>
+        <Button outlined disabled={loading} onClick={innerOnClose}>
+          Cancelar
         </Button>
-      </form>
+        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+          Criar usuário
+        </Button>
+      </footer>
     </Modal>
   );
 };

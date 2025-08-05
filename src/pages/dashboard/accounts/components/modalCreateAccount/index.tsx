@@ -38,37 +38,49 @@ export const ModalCreateAccount = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-account"
+      className="modal create-account default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
-      <h1>Create account</h1>
-      <form onSubmit={form.handleSubmit(innerOnSubmit)}>
-        <Controller
-          name="family"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              value={field.value}
-              label="Família"
-              compareBy={(a, b) => a.id === b.id}
-              onChange={field.onChange}
-              options={families.options}
-              error={error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="name"
-          control={form.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field }) => <Input {...field} label="Nome" />}
-        />
-        <Button disabled={loading} buttonType="submit">
-          Create account
+      <header>
+        <h1>Criar conta</h1>
+      </header>
+      <main>
+        <form onSubmit={form.handleSubmit(innerOnSubmit)}>
+          <Controller
+            name="family"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field, fieldState: { error } }) => (
+              <Select
+                value={field.value}
+                label="Família"
+                compareBy={(a, b) => a.id === b.id}
+                onChange={field.onChange}
+                options={families.options}
+                error={error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="name"
+            control={form.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field }) => (
+              <Input placeholder="Digite aqui" {...field} label="Nome" />
+            )}
+          />
+        </form>
+      </main>
+
+      <footer>
+        <Button outlined disabled={loading} onClick={innerOnClose}>
+          Cancelar
         </Button>
-      </form>
+        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+          Criar conta
+        </Button>
+      </footer>
     </Modal>
   );
 };

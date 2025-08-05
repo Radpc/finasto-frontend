@@ -1,13 +1,5 @@
 @use "/src/scss/colors" as colors;
 .modal.create-payment {
-  header {
-    margin-bottom: 1rem;
-    .title {
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
-  }
-
   main {
     form {
       display: flex;
@@ -55,17 +47,6 @@
           max-width: 48%;
         }
       }
-    }
-  }
-
-  footer {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-
-    > * {
-      flex-grow: 1;
-      max-width: 48%;
     }
   }
 }
