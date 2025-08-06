@@ -41,7 +41,7 @@ const semiAccessCodeEnding = [n, n, n, n];
 const semiAccessCode = [...semiAccessCodeEnding, "-"];
 export const maskAccessCode: Mask = [
   ...Array.from({ length: 10 })
-    .map((_, i) => semiAccessCode)
+    .map((_) => semiAccessCode)
     .flat(),
   ...semiAccessCodeEnding,
 ];
@@ -72,7 +72,7 @@ export const maskRg = (value: string) => {
 export const maskDateYearVehicle: Mask = [n, n, n, n];
 export const maskPlate = [l, l, l, "-", n, nl, n, n];
 
-export const maskInvoice: Mask = Array.from({ length: 9 }, (_, index) => n);
+export const maskInvoice: Mask = Array.from({ length: 9 }, (_) => n);
 
 export const maskDigit: Mask = [n];
 
