@@ -1,0 +1,89 @@
+@use "@/scss/colors" as colors;
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animation-shimmer {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(colors.$neutral-4, 0) 0,
+      rgba(colors.$neutral-4, 0.2) 20%,
+      rgba(colors.$neutral-4, 0.5) 60%,
+      rgba(colors.$neutral-4, 0)
+    );
+    animation: shimmer ease-in 1.7s infinite;
+    content: "";
+  }
+}
+
+.component-skeleton {
+  background: rgba(colors.$neutral-7, 0.05);
+  border-radius: 0.5rem;
+  position: relative;
+
+  &.shimmer {
+    @extend .animation-shimmer;
+  }
+
+  .line {
+    @extend .shimmer;
+    width: 100%;
+    height: 1rem;
+  }
+
+  .button {
+    @extend .shimmer;
+    width: 100%;
+    height: 2rem;
+    border-radius: 0.3rem;
+  }
+
+  &:has(.loading-item) {
+    background: transparent;
+    padding: 0.5rem;
+  }
+
+  .loading-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    .element {
+      background-color: colors.$neutral-2;
+    }
+    .circle {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 100%;
+    }
+    .rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      width: 100%;
+
+      .row {
+        height: 1rem;
+        @extend .animation-shimmer;
+      }
+    }
+  }
+}
+
+.component.loading-line {
+  td {
+    box-sizing: border-box;
+    padding: 0.5rem;
+  }
+}

@@ -99,6 +99,7 @@ table {
   tbody {
     background-color: colors.$neutral-1;
     > tr {
+      height: 2.5rem;
       border-bottom: 1px solid colors.$neutral-2;
       position: relative;
       :deep(.loading-td) {

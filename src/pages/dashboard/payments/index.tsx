@@ -21,6 +21,11 @@ import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
 import { useTags } from "@/hooks/swrHooks/useTags";
 import { useRedux } from "@/hooks/reduxHooks";
+import { SelectDatePicker } from "@/components/SelectDatePicker";
+import { DateTime } from "luxon";
+import { LoadingLines } from "@/components/Skeleton";
+import { EmptyTable } from "@/components/EmptyTable";
+import { ErrorTable } from "@/components/ErrorTable";
 
 interface IPagination {
   page: number;
@@ -59,6 +64,10 @@ export const PagePayments = () => {
     searchBy: "",
   });
 
+  useEffect(() => {
+    setPagination((l) => ({ ...l, page: 1 }));
+  }, [filters]);
+
   const [searchByRaw, setSearchByRaw] = useState("");
   const debounceSearchRaw = useDebounce(searchByRaw);
   useEffect(() => {
@@ -75,6 +84,8 @@ export const PagePayments = () => {
       const { data } = await PaymentService.getPayments({
         familyId: currentFamily?.id,
         page: pagination.page,
+        since: filters.since,
+        until: filters.until,
         pageSize: pagination.pageSize,
         searchBy: filters.searchBy,
         accountId: filters.account?.id,
@@ -156,6 +167,35 @@ export const PagePayments = () => {
               placeholder="Digite aqui"
               className="filter"
             />
+            <SelectDatePicker
+              label="Período"
+              clearable
+              onDateRangeChange={(firstDate, secondDate) => {
+                if (firstDate && secondDate) {
+                  const since = DateTime.fromJSDate(firstDate)
+                    .startOf("day")
+                    .toISO();
+
+                  const until = DateTime.fromJSDate(secondDate)
+                    .endOf("day")
+                    .toISO();
+
+                  if (since && until) {
+                    setFilters((l) => ({
+                      ...l,
+                      since,
+                      until,
+                    }));
+                  }
+                } else {
+                  setFilters((l) => ({
+                    ...l,
+                    since: undefined,
+                    until: undefined,
+                  }));
+                }
+              }}
+            />
             <Select
               className="filter"
               label="Conta"
@@ -235,9 +275,11 @@ export const PagePayments = () => {
           </thead>
           <tbody>
             {paymentsSWR.isLoading ? (
-              <tr>Is loading</tr>
-            ) : paymentsSWR.error || !paymentsSWR.data ? (
-              <tr>Error</tr>
+              <LoadingLines lines={10} length={8} />
+            ) : paymentsSWR.error ? (
+              <ErrorTable colSpan={8} />
+            ) : !paymentsSWR.data ? (
+              <EmptyTable colSpan={8} />
             ) : (
               paymentsSWR.data.map((p) => (
                 <tr key={"payment_" + p.id}>
