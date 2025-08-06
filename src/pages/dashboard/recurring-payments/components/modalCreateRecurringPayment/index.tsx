@@ -239,7 +239,6 @@ export const ModalCreateRecurringPayment = ({
             <Controller
               name="tags"
               control={form.control}
-              rules={{ required: "Campo necessário" }}
               render={({ field, fieldState: { error } }) => (
                 <Select
                   {...field}
