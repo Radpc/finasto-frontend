@@ -11,7 +11,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "./_style.scss";
 import { InfoHover } from "@/components/InfoHover";
-import { maskInt } from "@/utils/masks";
 import { currencyToNumber } from "@/utils/money";
 import { numberToCurrency } from "@/utils/formatters";
 import { DateTime } from "luxon";
@@ -285,7 +284,7 @@ export const ModalCreateRecurringPayment = ({
                   label="Parcelas"
                   placeholder="Digite aqui"
                   preppend={"X"}
-                  mask={maskInt}
+                  // mask={maskInt}
                   {...field}
                   error={error?.message}
                 />
@@ -308,7 +307,7 @@ export const ModalCreateRecurringPayment = ({
               }}
               render={({ field, fieldState: { error } }) => (
                 <Input
-                  mask={maskInt}
+                  // mask={maskInt}
                   placeholder="Digite aqui"
                   label="Dia do mês"
                   {...field}

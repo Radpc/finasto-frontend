@@ -1,18 +1,17 @@
 import React, { InputHTMLAttributes, useRef } from "react";
-import MaskedInput, { Mask } from "react-text-mask";
 import "./_style.scss";
 import { NumberFormatBase } from "react-number-format";
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   preppend?: string | React.ReactNode;
   append?: string | React.ReactNode;
-  mask?: Mask;
+  // mask?: Mask;
   inputClassName?: string;
   label?: React.ReactNode;
   error?: string;
   currency?: boolean;
   noError?: boolean;
   required?: boolean;
-  guide?: boolean;
+  // guide?: boolean;
   inputWrapperRef?: React.RefObject<HTMLDivElement>;
 }
 
@@ -37,13 +36,13 @@ const Input = React.forwardRef<HTMLInputElement, IProps>(
     {
       append,
       noError,
-      mask,
+      // mask,
       preppend,
       inputClassName,
       currency,
       label,
       error,
-      guide,
+      // guide,
       placeholder,
       required,
       inputWrapperRef,
@@ -112,32 +111,34 @@ const Input = React.forwardRef<HTMLInputElement, IProps>(
                 }}
                 className={inputClassName ?? ""}
               />
-            ) : mask ? (
-              <MaskedInput
-                {...props}
-                placeholder={placeholder}
-                className={"inner-input " + (inputClassName ?? "")}
-                mask={mask}
-                guide={guide}
-                render={(innerRef, innerProps) => (
-                  <input
-                    ref={(node) => {
-                      if (node) {
-                        innerRef(node);
-                        if (ref) {
-                          if (typeof ref === "function") {
-                            ref(node);
-                          } else if (ref) {
-                            ref.current = node;
-                          }
-                        }
-                      }
-                    }}
-                    {...innerProps}
-                  />
-                )}
-              />
             ) : (
+              // : mask ?
+              // (
+              //   <MaskedInput
+              //     {...props}
+              //     placeholder={placeholder}
+              //     className={"inner-input " + (inputClassName ?? "")}
+              //     mask={mask}
+              //     guide={guide}
+              //     render={(innerRef, innerProps) => (
+              //       <input
+              //         ref={(node) => {
+              //           if (node) {
+              //             innerRef(node);
+              //             if (ref) {
+              //               if (typeof ref === "function") {
+              //                 ref(node);
+              //               } else if (ref) {
+              //                 ref.current = node;
+              //               }
+              //             }
+              //           }
+              //         }}
+              //         {...innerProps}
+              //       />
+              //     )}
+              //   />
+              // )
               <input
                 {...props}
                 placeholder={placeholder}
