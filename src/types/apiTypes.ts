@@ -5,6 +5,8 @@ export enum UserRole {
 
 export enum PaymentStatus {
   Paid = "Paid",
+  Pending = "Pending",
+  Predicted = "Predicted",
 }
 
 export enum PaymentMethod {
