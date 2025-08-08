@@ -102,7 +102,7 @@ export const PagePayments = () => {
 
       return res.items;
     },
-    []
+    [currentFamily?.id]
   );
 
   const paymentsSWR = useSWR(paymentsSWRKey, () =>

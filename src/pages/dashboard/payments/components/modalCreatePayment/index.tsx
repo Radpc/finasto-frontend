@@ -63,7 +63,10 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const form = useForm<IPaymentForm>({ defaultValues: defaultCategoryForm });
   useEffect(() => {
-    form.reset();
+    form.reset({
+      ...defaultCategoryForm,
+      paymentDate: new Date().toISOString(),
+    });
   }, [form, visible]);
 
   const [loading, setLoading] = useState(false);
@@ -117,16 +120,6 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
   );
 
   const isOutcomeWatch = form.watch("isOutcome");
-
-  const clearForm = () => {
-    form.reset();
-    form.reset({ paymentDate: new Date().toISOString() });
-  };
-
-  useEffect(() => {
-    clearForm();
-    form.setFocus("account");
-  }, [visible]);
 
   return (
     <Modal
