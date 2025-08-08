@@ -109,6 +109,37 @@ export const PagePayments = () => {
     fetchPayments(pagination, filters)
   );
 
+  const paymentsSumSWRKey = useMemo(() => {
+    return `/payments-sum/${JSON.stringify(filters)}`;
+  }, [filters]);
+
+  const fetchPaymentsSum = useCallback(
+    async (filters: IFilters) => {
+      const { data } = await PaymentService.getPaymentSums({
+        familyId: currentFamily?.id,
+        since: filters.since,
+        until: filters.until,
+        searchBy: filters.searchBy,
+        accountId: filters.account?.id,
+        categoryId: filters.category?.id,
+        tagIds: filters.tags?.map((t) => t.id),
+        maxValue:
+          filters.paymentDirection === PaymentDirection.Outcome ? 0 : undefined,
+        minValue:
+          filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
+      });
+
+      const res = data.data;
+
+      return res;
+    },
+    [currentFamily?.id]
+  );
+
+  const paymentsSumSWR = useSWR(paymentsSumSWRKey, () =>
+    fetchPaymentsSum(filters)
+  );
+
   const [modalCreate, setModalCreate] = useState<{ visible: boolean }>({
     visible: false,
   });
@@ -154,7 +185,14 @@ export const PagePayments = () => {
       />
       <h1>Pagamentos</h1>
       <section className="kpis">
-        <KpiPayment label="Valor gasto" value="R$ 300" />
+        <KpiPayment
+          label="Valor ganho"
+          value={"R$ " + numberToCurrency(paymentsSumSWR.data?.gain || 0)}
+        />
+        <KpiPayment
+          label="Valor gasto"
+          value={"R$ " + numberToCurrency(paymentsSumSWR.data?.loss || 0)}
+        />
       </section>
       <main>
         <div className="above-table">

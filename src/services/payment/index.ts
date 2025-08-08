@@ -18,10 +18,19 @@ interface IListPaymentsParams {
   accountId?: string;
 }
 
+type IGetPaymentSumsQuery = Omit<IListPaymentsParams, "page" | "pageSize">;
+
 export class PaymentService {
   static getPayments(params: IListPaymentsParams) {
     const url = "/payments";
     type Response = ControllerResponse<PaginatedResponse<Payment>>;
+
+    return API.get<Response>(url, { headers: getAuthorizedHeader(), params });
+  }
+
+  static getPaymentSums(params: IGetPaymentSumsQuery) {
+    const url = "/payments/value-sum";
+    type Response = ControllerResponse<{ gain: number; loss: number }>;
 
     return API.get<Response>(url, { headers: getAuthorizedHeader(), params });
   }

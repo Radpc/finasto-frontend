@@ -1,6 +1,11 @@
 @use "/src/scss/colors" as colors;
 @use "/src/scss/mixins" as mixins;
 .page.payments {
+  .kpis {
+    display: flex;
+    gap: 1rem;
+  }
+
   main {
     margin-block: 1rem;
     border: 1px solid colors.$neutral-2;
