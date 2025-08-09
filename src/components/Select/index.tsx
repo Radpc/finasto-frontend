@@ -160,19 +160,38 @@ const Select = React.forwardRef(
 
     useEffect(() => {
       if (value !== undefined) {
-        setSelectedValue(value as SelectedValue<T, IsMulti>);
+        setSelectedValue(value);
 
         if (isMulti) {
           const vals = value as T[];
-          const opts =
-            options?.filter((o) =>
-              vals.some((v) => compareValues(o.value, v))
-            ) || [];
-          setSelectedOption(opts as unknown as SelectedOption<T, IsMulti>);
+          const selectedOptions: Option<T>[] = [];
+          const cacheOptions = selectedOption as Option<T>[];
+
+          vals.forEach((v) => {
+            const foundInOption = options?.find((o) =>
+              compareValues(o.value, v)
+            );
+            if (foundInOption) {
+              selectedOptions.push(foundInOption);
+            } else {
+              const foundInCacheOptions = cacheOptions.find((o) =>
+                compareValues(o.value, v)
+              );
+
+              if (foundInCacheOptions)
+                selectedOptions.push(foundInCacheOptions);
+            }
+          });
+
+          setSelectedOption(
+            selectedOptions as unknown as SelectedOption<T, IsMulti>
+          );
         } else {
-          const v = value as T;
-          const opt = options?.find((o) => compareValues(o.value, v)) || null;
-          setSelectedOption(opt as unknown as SelectedOption<T, IsMulti>);
+          const val = value as T;
+
+          const opt = options?.find((o) => compareValues(o.value, val)) || null;
+          if (opt)
+            setSelectedOption(opt as unknown as SelectedOption<T, IsMulti>);
         }
       } else {
         setSelectedValue((isMulti ? [] : null) as never);
