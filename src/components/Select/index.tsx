@@ -11,6 +11,7 @@ import React, {
 import "./_style.scss";
 
 import SvgCross from "@/assets/img/icons/Cross.svg?react";
+import SvgSync from "@/assets/img/icons/Sync.svg?react";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -96,10 +97,10 @@ const Select = React.forwardRef(
     }: IProps<T, IsMulti>,
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const document = useMemo(() => window.document, [window]);
+    const document = useMemo(() => window.document, []);
 
     const [showMenu, setShowMenu] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<
+    const [cachedOptions, setCachedOptions] = useState<
       SelectedOption<T, IsMulti>
     >((isMulti ? [] : null) as never);
     const [selectedValue, setSelectedValue] = useState<
@@ -163,39 +164,39 @@ const Select = React.forwardRef(
         setSelectedValue(value);
 
         if (isMulti) {
-          const vals = value as T[];
-          const selectedOptions: Option<T>[] = [];
-          const cacheOptions = selectedOption as Option<T>[];
+          const currentSelectedValues = value as T[];
+          const newCacheOptions: Option<T>[] = [];
+          const oldCacheOptions = cachedOptions as Option<T>[];
 
-          vals.forEach((v) => {
+          currentSelectedValues.forEach((v) => {
             const foundInOption = options?.find((o) =>
               compareValues(o.value, v)
             );
             if (foundInOption) {
-              selectedOptions.push(foundInOption);
+              newCacheOptions.push(foundInOption);
             } else {
-              const foundInCacheOptions = cacheOptions.find((o) =>
+              const foundInCacheOptions = oldCacheOptions.find((o) =>
                 compareValues(o.value, v)
               );
 
               if (foundInCacheOptions)
-                selectedOptions.push(foundInCacheOptions);
+                newCacheOptions.push(foundInCacheOptions);
             }
           });
 
-          setSelectedOption(
-            selectedOptions as unknown as SelectedOption<T, IsMulti>
+          setCachedOptions(
+            newCacheOptions as unknown as SelectedOption<T, IsMulti>
           );
         } else {
           const val = value as T;
 
           const opt = options?.find((o) => compareValues(o.value, val)) || null;
           if (opt)
-            setSelectedOption(opt as unknown as SelectedOption<T, IsMulti>);
+            setCachedOptions(opt as unknown as SelectedOption<T, IsMulti>);
         }
       } else {
         setSelectedValue((isMulti ? [] : null) as never);
-        setSelectedOption((isMulti ? [] : null) as never);
+        setCachedOptions((isMulti ? [] : null) as never);
       }
     }, [value, options]);
 
@@ -271,13 +272,13 @@ const Select = React.forwardRef(
 
     const getValueOption = (value: T): Option<T> | undefined => {
       if (isMulti) {
-        const options = selectedOption as Option<T>[];
+        const options = cachedOptions as Option<T>[];
         return (
           options.find((o) => compareValues(o.value, value)) ||
           options?.find((o) => compareValues(o.value, value))
         );
       } else {
-        const option = selectedOption as Option<T>;
+        const option = cachedOptions as Option<T>;
         return option && compareValues(option.value, value)
           ? option
           : options?.find((o) => compareValues(o.value, value));
@@ -294,7 +295,7 @@ const Select = React.forwardRef(
       const newSelected = (isMulti ? [] : null) as never;
       const newOptionsSelected = (isMulti ? [] : null) as never;
       setSelectedValue(newSelected);
-      setSelectedOption(newOptionsSelected);
+      setCachedOptions(newOptionsSelected);
       onChange?.(newSelected);
     };
 
@@ -313,7 +314,7 @@ const Select = React.forwardRef(
       onChange?.(newSelected);
 
       // Remove from option select
-      setSelectedOption(
+      setCachedOptions(
         (oldOptions) =>
           (oldOptions as Option<T>[]).filter(
             (o) => !compareValues(o.value, value)
@@ -328,7 +329,7 @@ const Select = React.forwardRef(
       if (isArray) {
         if (selectedValue.some((o) => compareValues(o, option.value))) {
           newSelected = removeSelected(option.value);
-          setSelectedOption(
+          setCachedOptions(
             (oldOptions) =>
               (oldOptions as Option<T>[]).filter(
                 (o) => !compareValues(o.value, option.value)
@@ -336,7 +337,7 @@ const Select = React.forwardRef(
           );
         } else {
           newSelected = [...selectedValue, option.value];
-          setSelectedOption(
+          setCachedOptions(
             (oldOptions) =>
               [
                 ...(oldOptions as Option<T>[]),
@@ -346,7 +347,7 @@ const Select = React.forwardRef(
         }
       } else {
         newSelected = option.value;
-        setSelectedOption(option as SelectedOption<T, IsMulti>);
+        setCachedOptions(option as SelectedOption<T, IsMulti>);
       }
 
       if (!isMulti) {
@@ -536,9 +537,7 @@ const Select = React.forwardRef(
               )}
 
               <div className="options">
-                {optionsLoading ? (
-                  <div className="loading">Carregando...</div>
-                ) : visibleOptions.length > 0 ? (
+                {visibleOptions.length > 0 ? (
                   visibleOptions.map((option, index) => (
                     <div
                       tabIndex={index + 1}
@@ -575,6 +574,11 @@ const Select = React.forwardRef(
                 ) : (
                   <div className="no-items">
                     <span>Sem resultados</span>
+                  </div>
+                )}
+                {optionsLoading && (
+                  <div className="loading">
+                    <SvgSync />
                   </div>
                 )}
               </div>

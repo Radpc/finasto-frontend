@@ -165,16 +165,13 @@ export const PagePayments = () => {
   };
 
   const [rawSearchAccount, setRawSearchAccount] = useState("");
-  const debounceRawSearchAccount = useDebounce(rawSearchAccount);
-  const accounts = useAccounts({ searchBy: debounceRawSearchAccount });
+  const accounts = useAccounts({ searchBy: rawSearchAccount });
 
   const [rawSearchCategory, setRawSearchCategory] = useState("");
-  const debounceRawSearchCategory = useDebounce(rawSearchCategory);
-  const categories = useCategories({ searchBy: debounceRawSearchCategory });
+  const categories = useCategories({ searchBy: rawSearchCategory });
 
   const [rawSearchTag, setRawSearchTag] = useState("");
-  const debounceRawSearchTag = useDebounce(rawSearchTag);
-  const tags = useTags({ searchBy: debounceRawSearchTag });
+  const tags = useTags({ searchBy: rawSearchTag });
 
   return (
     <div className="page payments">

@@ -224,6 +224,20 @@ $background-color: colors.$neutral-1;
       align-items: center;
       justify-content: center;
       padding: 0.2rem;
+
+      svg {
+        height: 1rem;
+        animation: 0.8s rotate infinite ease-in-out;
+        @keyframes rotate {
+          from {
+            rotate: 0deg;
+          }
+
+          to {
+            rotate: 360deg;
+          }
+        }
+      }
     }
 
     .no-items {

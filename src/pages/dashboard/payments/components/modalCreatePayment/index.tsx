@@ -1,9 +1,7 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import Modal, { ModalProps } from "@/components/Modal";
-import { Select, Option } from "@/components/Select";
-import { useDebounce } from "@/hooks/useDebounce";
-import { CategoryService } from "@/services/category";
+import { Select } from "@/components/Select";
 import {
   Account,
   Category,
@@ -11,16 +9,16 @@ import {
   PaymentStatus,
   Tag,
 } from "@/types/apiTypes";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import useSWR from "swr";
 import { paymentStatusOptions } from "../../utils/paymentStatus";
 import { paymentMethodsOptions } from "../../utils/paymentMethods";
 import { DateTime } from "luxon";
 import "./_style.scss";
 import { Switch } from "@/components/Switch";
-import { TagService } from "@/services/tag";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";
+import { useCategories } from "@/hooks/swrHooks/useCategories";
+import { useTags } from "@/hooks/swrHooks/useTags";
 
 export interface IPaymentForm {
   description: string;
@@ -80,44 +78,11 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
     }
   };
 
-  const getCategoryOptions = useCallback(async (searchBy?: string) => {
-    const res = await CategoryService.getCategories({
-      page: 1,
-      pageSize: 10,
-      searchBy,
-    });
-    return res.data.data.items.map((c) => ({
-      label: c.label,
-      value: c,
-    })) as Option<Category>[];
-  }, []);
-
   const [categorySearch, setCategorySearch] = useState("");
-  const categorySearchDebounce = useDebounce(categorySearch);
-
-  const categoryOptionsSWR = useSWR(
-    "/category/?searchBy=" + categorySearchDebounce,
-    () => getCategoryOptions(categorySearchDebounce)
-  );
-
-  const getTagOptions = useCallback(async (searchBy?: string) => {
-    const res = await TagService.getTags({
-      page: 1,
-      pageSize: 10,
-      searchBy,
-    });
-    return res.data.data.items.map((c) => ({
-      label: c.label,
-      value: c,
-    })) as Option<Tag>[];
-  }, []);
+  const categories = useCategories({ searchBy: categorySearch });
 
   const [tagSearch, setTagSearch] = useState("");
-  const tagSearchDebounce = useDebounce(tagSearch);
-
-  const tagOptionsSWR = useSWR("/tags/?searchBy=" + tagSearchDebounce, () =>
-    getTagOptions(tagSearchDebounce)
-  );
+  const tags = useTags({ searchBy: tagSearch });
 
   const isOutcomeWatch = form.watch("isOutcome");
 
@@ -227,8 +192,8 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
                   isSearchable
                   compareBy={(c1, c2) => c1.id === c2.id}
                   onSearch={(newValue) => setCategorySearch(newValue)}
-                  optionsLoading={categoryOptionsSWR.isLoading}
-                  options={categoryOptionsSWR.data}
+                  optionsLoading={categories.isLoading}
+                  options={categories.options}
                   placeholder="Selecione"
                   label="Categoria"
                   onChange={field.onChange}
@@ -283,8 +248,8 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
                   onChange={field.onChange}
                   value={field.value}
                   onSearch={(newSearch) => setTagSearch(newSearch)}
-                  optionsLoading={tagOptionsSWR.isLoading}
-                  options={tagOptionsSWR.data}
+                  optionsLoading={tags.isLoading}
+                  options={tags.options}
                   error={error?.message}
                 />
               )}
