@@ -26,6 +26,8 @@ import { DateTime } from "luxon";
 import { LoadingLines } from "@/components/Skeleton";
 import { EmptyTable } from "@/components/EmptyTable";
 import { ErrorTable } from "@/components/ErrorTable";
+import SvgSync from "@/assets/img/icons/Sync.svg?react";
+import { InfoHover } from "@/components/InfoHover";
 
 interface IPagination {
   page: number;
@@ -80,7 +82,6 @@ export const PagePayments = () => {
 
   const fetchPayments = useCallback(
     async (pagination: IPagination, filters: IFilters) => {
-      console.log(filters);
       const { data } = await PaymentService.getPayments({
         familyId: currentFamily?.id,
         page: pagination.page,
@@ -204,6 +205,7 @@ export const PagePayments = () => {
             />
             <SelectDatePicker
               label="Período"
+              noError
               clearable
               onDateRangeChange={(firstDate, secondDate) => {
                 if (firstDate && secondDate) {
@@ -318,7 +320,20 @@ export const PagePayments = () => {
             ) : (
               paymentsSWR.data.map((p) => (
                 <tr key={"payment_" + p.id}>
-                  <td>{p.description}</td>
+                  <td>
+                    <span className="description">
+                      {p.recurringPayment && (
+                        <InfoHover from={<SvgSync />}>
+                          {p.observation}{" "}
+                          {p.recurringPayment.totalValue
+                            ? "- R$ " +
+                              numberToCurrency(p.recurringPayment.totalValue)
+                            : ""}
+                        </InfoHover>
+                      )}
+                      <span>{p.description}</span>
+                    </span>
+                  </td>
                   <td>
                     <div className="price-label">
                       <SvgChevronDown

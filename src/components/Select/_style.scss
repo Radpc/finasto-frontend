@@ -248,10 +248,10 @@ $background-color: colors.$neutral-1;
       }
     }
 
-    // &:not(* > :hover) > .option:first-child:not(.selected) {
-    //   background-color: colors.$neutral-2;
-    //   color: colors.$primary-1;
-    // }
+    &:not(* > :hover) > .option:first-child:not(.selected) {
+      background-color: colors.$neutral-2;
+      color: colors.$primary-1;
+    }
 
     .option {
       padding: 0.4rem 0.4rem;

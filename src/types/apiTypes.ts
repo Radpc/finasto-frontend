@@ -40,6 +40,7 @@ export interface Payment extends DatabaseDates {
   paymentMethod: PaymentMethod;
   category?: Category;
   tags?: Tag[];
+  recurringPayment?: RecurringPayment;
 }
 
 export interface Family extends DatabaseDates {
