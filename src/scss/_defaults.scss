@@ -138,13 +138,6 @@ table {
           padding-left: $padding-between;
         }
 
-        &:last-child {
-          & > .component.dropdown-team > button > svg,
-          & > svg {
-            margin-left: 1rem;
-          }
-        }
-
         > span,
         > em,
         > small {

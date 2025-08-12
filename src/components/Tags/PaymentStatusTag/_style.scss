@@ -1,0 +1,22 @@
+@use "/src/scss/colors" as colors;
+.component.payment-status-tag {
+  display: inline-block;
+  background-color: colors.$neutral-2;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.5rem;
+
+  &.paid {
+    background-color: colors.$secondary-5;
+    color: colors.$primary-2;
+  }
+
+  &.predicted {
+    background-color: colors.$secondary-1;
+    color: colors.$primary-2;
+  }
+
+  &.pending {
+    background-color: colors.$secondary-2;
+    color: colors.$primary-2;
+  }
+}

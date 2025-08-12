@@ -72,6 +72,23 @@
           }
         }
       }
+
+      td .text-and-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      td .btn-dropdown {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+
+        svg {
+          margin: 0;
+        }
+      }
     }
   }
 }

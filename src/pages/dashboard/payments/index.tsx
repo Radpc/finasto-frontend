@@ -14,8 +14,7 @@ import { KpiPayment } from "./components/kpiPayment";
 import { currencyToNumber } from "@/utils/money";
 import { useDebounce } from "@/hooks/useDebounce";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
-import { Account, Category, Tag } from "@/types/apiTypes";
-import { translatePaymentStatus } from "@/utils/translation";
+import { Account, Category, PaymentStatus, Tag } from "@/types/apiTypes";
 import { Option, Select } from "@/components/Select";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
@@ -28,6 +27,11 @@ import { EmptyTable } from "@/components/EmptyTable";
 import { ErrorTable } from "@/components/ErrorTable";
 import SvgSync from "@/assets/img/icons/Sync.svg?react";
 import { InfoHover } from "@/components/InfoHover";
+import { paymentStatusOptions } from "./utils/paymentStatus";
+import { PaymentStatusTag } from "@/components/Tags/PaymentStatusTag";
+import SvgCalendar from "@/assets/img/icons/Calendar.svg?react";
+import SvgOptionDots from "@/assets/img/icons/OptionDots.svg?react";
+import { Dropdown } from "@/components/Dropdown";
 
 interface IPagination {
   page: number;
@@ -52,7 +56,14 @@ interface IFilters {
   since?: string;
   until?: string;
   paymentDirection?: PaymentDirection;
+  hasRecurringPayment?: boolean;
+  status?: PaymentStatus;
 }
+
+const hasRecurringPaymentOptions: Option<boolean>[] = [
+  { label: "É parcelado", value: true },
+  { label: "Não é parcelado", value: false },
+];
 
 export const PagePayments = () => {
   const currentFamily = useRedux((s) => s.session.selectedFamily);
@@ -96,6 +107,8 @@ export const PagePayments = () => {
           filters.paymentDirection === PaymentDirection.Outcome ? 0 : undefined,
         minValue:
           filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
+        hasRecurringPayment: filters.hasRecurringPayment,
+        status: filters.status,
       });
 
       const res = data.data;
@@ -128,6 +141,8 @@ export const PagePayments = () => {
           filters.paymentDirection === PaymentDirection.Outcome ? 0 : undefined,
         minValue:
           filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
+        hasRecurringPayment: filters.hasRecurringPayment,
+        status: filters.status,
       });
 
       const res = data.data;
@@ -291,6 +306,30 @@ export const PagePayments = () => {
                 setFilters((f) => ({ ...f, paymentDirection }))
               }
             />
+
+            <Select
+              noError
+              className="filter"
+              label="Status"
+              placeholder="Selecione"
+              clearable
+              options={paymentStatusOptions}
+              value={filters.status}
+              onChange={(status) => setFilters((f) => ({ ...f, status }))}
+            />
+
+            <Select
+              noError
+              className="filter"
+              label="Parcelado"
+              placeholder="Selecione"
+              options={hasRecurringPaymentOptions}
+              value={filters.hasRecurringPayment}
+              clearable
+              onChange={(hasRecurringPayment) =>
+                setFilters((f) => ({ ...f, hasRecurringPayment }))
+              }
+            />
           </div>
 
           <Button onClick={() => setModalCreate({ visible: true })}>
@@ -307,7 +346,7 @@ export const PagePayments = () => {
               <th>Status</th>
               <th>Data do pagamento</th>
               <th>Adicionado em</th>
-              <th>Actions</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -327,7 +366,9 @@ export const PagePayments = () => {
                           {p.observation}{" "}
                           {p.recurringPayment.totalValue
                             ? "- R$ " +
-                              numberToCurrency(p.recurringPayment.totalValue)
+                              numberToCurrency(
+                                Math.abs(p.recurringPayment.totalValue)
+                              )
                             : ""}
                         </InfoHover>
                       )}
@@ -356,10 +397,35 @@ export const PagePayments = () => {
                     )}
                   </td>
 
-                  <td>{translatePaymentStatus[p.status]}</td>
-                  <td>{formatDate(p.paymentDate)}</td>
-                  <td>{formatDate(p.createdAt)}</td>
-                  <td>Actions</td>
+                  <td>
+                    <PaymentStatusTag tag={p.status} />
+                  </td>
+                  <td>
+                    <div className="text-and-icon">
+                      <SvgCalendar />
+                      <span>{formatDate(p.paymentDate)}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="text-and-icon">
+                      <SvgCalendar />
+                      <span>{formatDate(p.createdAt)}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <Dropdown
+                      buttons
+                      from={(props) => (
+                        <button className="btn-dropdown" {...props}>
+                          <SvgOptionDots />
+                        </button>
+                      )}
+                    >
+                      <button disabled>Visualizar</button>
+                      <button disabled>Editar</button>
+                      <button disabled>Excluir</button>
+                    </Dropdown>
+                  </td>
                 </tr>
               ))
             )}

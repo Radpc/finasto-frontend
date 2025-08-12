@@ -16,6 +16,7 @@ interface IListPaymentsParams {
   tagIds?: string[];
   familyId?: string;
   accountId?: string;
+  hasRecurringPayment?: boolean;
 }
 
 type IGetPaymentSumsQuery = Omit<IListPaymentsParams, "page" | "pageSize">;
