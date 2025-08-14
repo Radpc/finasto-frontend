@@ -41,6 +41,7 @@ export interface Payment extends DatabaseDates {
   category?: Category;
   tags?: Tag[];
   recurringPayment?: RecurringPayment;
+  createdBy?: User;
 }
 
 export interface Family extends DatabaseDates {

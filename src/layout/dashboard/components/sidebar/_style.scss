@@ -1,7 +1,9 @@
+@use "@/scss/colors" as colors;
 .component.sidebar {
   padding: 1rem;
-  background-color: orange;
+  background-color: colors.$primary-1;
   width: 10rem;
+  min-width: 10rem;
 
   > nav {
     display: flex;

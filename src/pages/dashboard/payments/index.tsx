@@ -14,7 +14,13 @@ import { KpiPayment } from "./components/kpiPayment";
 import { currencyToNumber } from "@/utils/money";
 import { useDebounce } from "@/hooks/useDebounce";
 import SvgChevronDown from "@/assets/img/icons/ChevronDown.svg?react";
-import { Account, Category, PaymentStatus, Tag } from "@/types/apiTypes";
+import {
+  Account,
+  Category,
+  Payment,
+  PaymentStatus,
+  Tag,
+} from "@/types/apiTypes";
 import { Option, Select } from "@/components/Select";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
@@ -32,6 +38,7 @@ import { PaymentStatusTag } from "@/components/Tags/PaymentStatusTag";
 import SvgCalendar from "@/assets/img/icons/Calendar.svg?react";
 import SvgOptionDots from "@/assets/img/icons/OptionDots.svg?react";
 import { Dropdown } from "@/components/Dropdown";
+import { ModalVisualizePayment } from "./components/modalVisualizePayment";
 
 interface IPagination {
   page: number;
@@ -160,6 +167,13 @@ export const PagePayments = () => {
     visible: false,
   });
 
+  const [modalVisualize, setModalVisualize] = useState<{
+    visible: boolean;
+    payment?: Payment;
+  }>({
+    visible: false,
+  });
+
   const onCreatePayment = async (form: IPaymentForm) => {
     try {
       await PaymentService.createPayment({
@@ -196,6 +210,13 @@ export const PagePayments = () => {
         onClose={() => setModalCreate({ visible: false })}
         onSubmit={onCreatePayment}
       />
+      {modalVisualize.payment && (
+        <ModalVisualizePayment
+          payment={modalVisualize.payment}
+          visible={modalVisualize.visible}
+          onClose={() => setModalVisualize((l) => ({ ...l, visible: false }))}
+        />
+      )}
       <h1>Pagamentos</h1>
       <section className="kpis">
         <KpiPayment
@@ -421,7 +442,13 @@ export const PagePayments = () => {
                         </button>
                       )}
                     >
-                      <button disabled>Visualizar</button>
+                      <button
+                        onClick={() =>
+                          setModalVisualize({ visible: true, payment: p })
+                        }
+                      >
+                        Visualizar
+                      </button>
                       <button disabled>Editar</button>
                       <button disabled>Excluir</button>
                     </Dropdown>

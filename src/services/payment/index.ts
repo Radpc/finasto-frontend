@@ -29,6 +29,13 @@ export class PaymentService {
     return API.get<Response>(url, { headers: getAuthorizedHeader(), params });
   }
 
+  static getPayment(paymentId: string) {
+    const url = "/payments/" + paymentId;
+    type Response = ControllerResponse<Payment>;
+
+    return API.get<Response>(url, { headers: getAuthorizedHeader() });
+  }
+
   static getPaymentSums(params: IGetPaymentSumsQuery) {
     const url = "/payments/value-sum";
     type Response = ControllerResponse<{ gain: number; loss: number }>;
