@@ -59,6 +59,8 @@ const formatISOToInputDate = (iso: string) => {
 export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
   const accounts = useAccounts();
 
+  const [createMore, setCreateMore] = useState(false);
+
   const form = useForm<IPaymentForm>({ defaultValues: defaultCategoryForm });
   useEffect(() => {
     form.reset({
@@ -69,10 +71,15 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const [loading, setLoading] = useState(false);
   const innerOnClose = () => (!loading ? onClose() : undefined);
-  const innerOnSubmit = async (form: IPaymentForm) => {
+  const innerOnSubmit = async (fields: IPaymentForm) => {
     try {
       setLoading(true);
-      await onSubmit(form);
+      await onSubmit(fields);
+      if (!createMore) {
+        innerOnClose();
+      } else {
+        form.reset();
+      }
     } finally {
       setLoading(false);
     }
@@ -274,9 +281,19 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
         >
           Cancelar
         </Button>
-        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
-          Registrar
-        </Button>
+        <div className="right-side">
+          <label>
+            <input
+              onClick={() => setCreateMore((l) => !l)}
+              checked={createMore}
+              type="checkbox"
+            />
+            <span>Criar mais</span>
+          </label>
+          <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+            Registrar
+          </Button>
+        </div>
       </footer>
     </Modal>
   );

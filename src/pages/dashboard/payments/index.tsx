@@ -187,7 +187,6 @@ export const PagePayments = () => {
         observation: form.observation,
         tagIds: form.tags.map((t) => t.id),
       });
-      setModalCreate({ visible: false });
       paymentsSWR.mutate();
     } catch (err) {
       console.log(err);

@@ -49,4 +49,17 @@
       }
     }
   }
+
+  > footer {
+    .right-side {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      label {
+        display: flex;
+        gap: 0.4rem;
+      }
+    }
+  }
 }
