@@ -54,4 +54,9 @@ export class PaymentService {
     const url = "/payments/" + paymentId;
     return API.patch(url, payload, { headers: getAuthorizedHeader() });
   }
+
+  static removePayment(paymentId: string) {
+    const url = "/payments/" + paymentId;
+    return API.delete(url, { headers: getAuthorizedHeader() });
+  }
 }

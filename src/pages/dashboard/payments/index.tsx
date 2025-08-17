@@ -45,6 +45,7 @@ import {
   IUpdatePaymentForm,
   ModalUpdatePayment,
 } from "./components/modalUpdatePayment";
+import { ModalRemovePayment } from "./components/modalRemovePayment";
 
 interface IPagination {
   page: number;
@@ -190,6 +191,13 @@ export const PagePayments = () => {
     visible: false,
   });
 
+  const [modalRemove, setModalRemove] = useState<{
+    visible: boolean;
+    payment?: Payment;
+  }>({
+    visible: false,
+  });
+
   const onCreatePayment = async (form: ICreatePaymentForm) => {
     try {
       await PaymentService.createPayment({
@@ -231,6 +239,18 @@ export const PagePayments = () => {
     }
   };
 
+  const onRemovePayment = async () => {
+    if (!modalRemove.payment) return;
+
+    try {
+      await PaymentService.removePayment(modalRemove.payment.id);
+      paymentsSWR.mutate();
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
   const [rawSearchAccount, setRawSearchAccount] = useState("");
   const accounts = useAccounts({ searchBy: rawSearchAccount });
 
@@ -252,6 +272,11 @@ export const PagePayments = () => {
         defaultValues={modalUpdate.payment}
         visible={modalUpdate.visible}
         onClose={() => setModalUpdate((l) => ({ ...l, visible: false }))}
+      />
+      <ModalRemovePayment
+        onConfirm={onRemovePayment}
+        visible={modalRemove.visible}
+        onClose={() => setModalRemove((l) => ({ ...l, visible: false }))}
       />
       {modalVisualize.payment && (
         <ModalVisualizePayment
@@ -512,7 +537,13 @@ export const PagePayments = () => {
                       >
                         Editar
                       </button>
-                      <button disabled>Excluir</button>
+                      <button
+                        onClick={() => {
+                          setModalRemove({ visible: true, payment: p });
+                        }}
+                      >
+                        Excluir
+                      </button>
                     </Dropdown>
                   </td>
                 </tr>
