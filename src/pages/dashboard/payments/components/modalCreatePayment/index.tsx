@@ -33,7 +33,7 @@ export interface IPaymentForm {
   tags: Tag[];
 }
 
-const defaultCategoryForm: Partial<IPaymentForm> = {
+const defaultCreatePaymentForm: Partial<IPaymentForm> = {
   description: "",
   isOutcome: true,
   category: undefined,
@@ -61,10 +61,12 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const [createMore, setCreateMore] = useState(false);
 
-  const form = useForm<IPaymentForm>({ defaultValues: defaultCategoryForm });
+  const form = useForm<IPaymentForm>({
+    defaultValues: defaultCreatePaymentForm,
+  });
   useEffect(() => {
     form.reset({
-      ...defaultCategoryForm,
+      ...defaultCreatePaymentForm,
       paymentDate: new Date().toISOString(),
     });
   }, [form, visible]);
@@ -78,7 +80,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
       if (!createMore) {
         onClose();
       } else {
-        form.reset();
+        form.reset({ value: defaultCreatePaymentForm.value });
       }
     } finally {
       setLoading(false);
