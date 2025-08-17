@@ -90,7 +90,23 @@ export const PagePayments = () => {
   });
   const [filters, setFilters] = useState<IFilters>({
     searchBy: "",
+    since: DateTime.now().startOf("month").toISO(),
+    until: DateTime.now().endOf("month").toISO(),
   });
+
+  const datepickerSince = useMemo(() => {
+    if (filters.since) {
+      return DateTime.fromISO(filters.since).toJSDate();
+    }
+    return null;
+  }, [filters.since]);
+
+  const datepickerUntil = useMemo(() => {
+    if (filters.until) {
+      return DateTime.fromISO(filters.until).toJSDate();
+    }
+    return null;
+  }, [filters.until]);
 
   useEffect(() => {
     setPagination((l) => ({ ...l, page: 1 }));
@@ -311,6 +327,7 @@ export const PagePayments = () => {
               label="Período"
               noError
               clearable
+              value={[datepickerSince, datepickerUntil]}
               onDateRangeChange={(firstDate, secondDate) => {
                 if (firstDate && secondDate) {
                   const since = DateTime.fromJSDate(firstDate)

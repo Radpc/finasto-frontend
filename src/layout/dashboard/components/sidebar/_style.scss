@@ -1,12 +1,76 @@
 @use "@/scss/colors" as colors;
 .component.sidebar {
   padding: 1rem;
-  background-color: colors.$primary-1;
+  background-color: colors.$secondary-7;
+  transition: 0.2s ease-in-out width, 0.2s ease-in-out min-width;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
   width: 10rem;
   min-width: 10rem;
+
+  &.closed {
+    width: 4rem;
+    min-width: 4rem;
+  }
 
   > nav {
     display: flex;
     flex-direction: column;
+    gap: 24px;
+    height: auto;
+
+    div {
+      padding: 10px;
+      background-color: colors.$neutral-3;
+      border: 1px solid colors.$neutral-5;
+      border-radius: 15px;
+
+      &:hover {
+        background-color: colors.$neutral-4;
+      }
+
+      a {
+        color: black;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        min-height: 36px;
+        justify-content: start;
+
+        &:hover {
+          color: black;
+        }
+
+        &.closed {
+          justify-content: center;
+        }
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  button {
+    background: none;
+    border: none;
+
+    display: flex;
+    justify-content: end;
+
+    p {
+      color: colors.$neutral-1;
+      width: 2rem;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }

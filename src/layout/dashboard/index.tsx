@@ -8,9 +8,9 @@ export const LayoutDashboard = () => {
   const user = useRedux((state) => state.session.user);
   return (
     <div className="layout dashboard">
-      <Sidebar className="sidebar" />
+      {user && <Topbar className="topbar" user={user} />}
       <main>
-        {user && <Topbar className="topbar" user={user} />}
+        <Sidebar className="sidebar" />
         <div className="layout-content">
           <Outlet />
         </div>
