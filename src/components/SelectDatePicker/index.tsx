@@ -194,7 +194,6 @@ const SelectDatePicker = React.forwardRef<HTMLInputElement, Props>(
           startDate={startDate}
           endDate={endDate}
           onChange={onDateChange}
-          maxDate={new Date()}
           showPopperArrow={false}
           formatWeekDay={(day) => day.charAt(0).toUpperCase()}
           dateFormat="dd/MM/yyyy"

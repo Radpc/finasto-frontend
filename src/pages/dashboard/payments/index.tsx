@@ -18,6 +18,7 @@ import {
   Account,
   Category,
   Payment,
+  PaymentMethod,
   PaymentStatus,
   Tag,
 } from "@/types/apiTypes";
@@ -39,6 +40,7 @@ import SvgCalendar from "@/assets/img/icons/Calendar.svg?react";
 import SvgOptionDots from "@/assets/img/icons/OptionDots.svg?react";
 import { Dropdown } from "@/components/Dropdown";
 import { ModalVisualizePayment } from "./components/modalVisualizePayment";
+import { paymentMethodsOptions } from "./utils/paymentMethods";
 
 interface IPagination {
   page: number;
@@ -65,6 +67,7 @@ interface IFilters {
   paymentDirection?: PaymentDirection;
   hasRecurringPayment?: boolean;
   status?: PaymentStatus;
+  paymentMethod?: PaymentMethod;
 }
 
 const hasRecurringPaymentOptions: Option<boolean>[] = [
@@ -116,6 +119,7 @@ export const PagePayments = () => {
           filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
         hasRecurringPayment: filters.hasRecurringPayment,
         status: filters.status,
+        paymentMethod: filters.paymentMethod,
       });
 
       const res = data.data;
@@ -150,6 +154,7 @@ export const PagePayments = () => {
           filters.paymentDirection === PaymentDirection.Income ? 0 : undefined,
         hasRecurringPayment: filters.hasRecurringPayment,
         status: filters.status,
+        paymentMethod: filters.paymentMethod,
       });
 
       const res = data.data;
@@ -324,6 +329,19 @@ export const PagePayments = () => {
               value={filters.paymentDirection}
               onChange={(paymentDirection) =>
                 setFilters((f) => ({ ...f, paymentDirection }))
+              }
+            />
+
+            <Select
+              noError
+              className="filter"
+              label="Método de pagamento"
+              placeholder="Selecione"
+              clearable
+              options={paymentMethodsOptions}
+              value={filters.paymentMethod}
+              onChange={(paymentMethod) =>
+                setFilters((f) => ({ ...f, paymentMethod }))
               }
             />
 

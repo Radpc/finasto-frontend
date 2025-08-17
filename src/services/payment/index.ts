@@ -1,4 +1,4 @@
-import { Payment, PaymentStatus } from "@/types/apiTypes";
+import { Payment, PaymentMethod, PaymentStatus } from "@/types/apiTypes";
 import { API, getAuthorizedHeader } from "../../config/api";
 import { ICreatePaymentDTO } from "./DTO/create-payment";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
@@ -17,6 +17,7 @@ interface IListPaymentsParams {
   familyId?: string;
   accountId?: string;
   hasRecurringPayment?: boolean;
+  paymentMethod?: PaymentMethod;
 }
 
 type IGetPaymentSumsQuery = Omit<IListPaymentsParams, "page" | "pageSize">;
