@@ -6,7 +6,10 @@ type ExtraCreatePaymentDTO = {
   accountId: string;
 };
 
-type ICreatePaymentRemove = Pick<Payment, "category" | "tags">;
+type ICreatePaymentRemove = Pick<
+  Payment,
+  "category" | "tags" | "recurringPayment"
+>;
 
 export type ICreatePaymentDTO = Omit<
   Payment,

@@ -5,7 +5,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import useSWR from "swr";
 import Pagination from "@/components/Pagination";
 import {
-  IPaymentForm,
+  IPaymentForm as ICreatePaymentForm,
   ModalCreatePayment,
 } from "./components/modalCreatePayment";
 import { formatDate, numberToCurrency } from "@/utils/formatters";
@@ -41,6 +41,10 @@ import SvgOptionDots from "@/assets/img/icons/OptionDots.svg?react";
 import { Dropdown } from "@/components/Dropdown";
 import { ModalVisualizePayment } from "./components/modalVisualizePayment";
 import { paymentMethodsOptions } from "./utils/paymentMethods";
+import {
+  IUpdatePaymentForm,
+  ModalUpdatePayment,
+} from "./components/modalUpdatePayment";
 
 interface IPagination {
   page: number;
@@ -179,7 +183,14 @@ export const PagePayments = () => {
     visible: false,
   });
 
-  const onCreatePayment = async (form: IPaymentForm) => {
+  const [modalUpdate, setModalUpdate] = useState<{
+    visible: boolean;
+    payment?: Payment;
+  }>({
+    visible: false,
+  });
+
+  const onCreatePayment = async (form: ICreatePaymentForm) => {
     try {
       await PaymentService.createPayment({
         accountId: form.account.id,
@@ -195,6 +206,28 @@ export const PagePayments = () => {
       paymentsSWR.mutate();
     } catch (err) {
       console.log(err);
+      throw err;
+    }
+  };
+
+  const onUpdatePayment = async (form: IUpdatePaymentForm) => {
+    if (!modalUpdate.payment) return;
+
+    try {
+      await PaymentService.updatePayment(modalUpdate.payment.id, {
+        categoryId: form.category.id,
+        description: form.description,
+        paymentDate: form.paymentDate,
+        status: form.status,
+        paymentMethod: form.paymentMethod,
+        value: currencyToNumber(form.value) * (form.isOutcome ? -1 : 1),
+        observation: form.observation,
+        tagIds: form.tags.map((t) => t.id),
+      });
+      paymentsSWR.mutate();
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   };
 
@@ -213,6 +246,12 @@ export const PagePayments = () => {
         visible={modalCreate.visible}
         onClose={() => setModalCreate({ visible: false })}
         onSubmit={onCreatePayment}
+      />
+      <ModalUpdatePayment
+        onSubmit={onUpdatePayment}
+        defaultValues={modalUpdate.payment}
+        visible={modalUpdate.visible}
+        onClose={() => setModalUpdate((l) => ({ ...l, visible: false }))}
       />
       {modalVisualize.payment && (
         <ModalVisualizePayment
@@ -466,7 +505,13 @@ export const PagePayments = () => {
                       >
                         Visualizar
                       </button>
-                      <button disabled>Editar</button>
+                      <button
+                        onClick={() => {
+                          setModalUpdate({ visible: true, payment: p });
+                        }}
+                      >
+                        Editar
+                      </button>
                       <button disabled>Excluir</button>
                     </Dropdown>
                   </td>

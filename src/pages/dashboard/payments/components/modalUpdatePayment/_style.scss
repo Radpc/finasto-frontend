@@ -1,0 +1,65 @@
+@use "/src/scss/colors" as colors;
+.modal.update-payment {
+  main {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      .price-section {
+        display: flex;
+        gap: 1rem;
+
+        .input.price {
+          flex-grow: 1;
+
+          input {
+            font-weight: 500;
+          }
+
+          &.positive input {
+            color: green;
+          }
+
+          &.negative input {
+            color: red;
+          }
+        }
+
+        > .switch {
+          margin-top: -0.6rem;
+          display: flex;
+          flex-direction: column;
+
+          .label {
+            color: colors.$input-border;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+          }
+        }
+      }
+
+      .divided {
+        display: flex;
+        justify-content: space-between;
+
+        > * {
+          flex-grow: 1;
+          max-width: 48%;
+        }
+      }
+    }
+  }
+
+  > footer {
+    .right-side {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      label {
+        display: flex;
+        gap: 0.4rem;
+      }
+    }
+  }
+}

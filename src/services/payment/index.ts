@@ -2,6 +2,7 @@ import { Payment, PaymentMethod, PaymentStatus } from "@/types/apiTypes";
 import { API, getAuthorizedHeader } from "../../config/api";
 import { ICreatePaymentDTO } from "./DTO/create-payment";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
+import { IUpdatePaymentDTO } from "./DTO/update-payment";
 
 interface IListPaymentsParams {
   page: number;
@@ -47,5 +48,10 @@ export class PaymentService {
   static createPayment(payload: ICreatePaymentDTO) {
     const url = "/payments";
     return API.post(url, payload, { headers: getAuthorizedHeader() });
+  }
+
+  static updatePayment(paymentId: string, payload: IUpdatePaymentDTO) {
+    const url = "/payments/" + paymentId;
+    return API.patch(url, payload, { headers: getAuthorizedHeader() });
   }
 }

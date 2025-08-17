@@ -3,8 +3,8 @@ import { Input } from "@/components/Input";
 import Modal, { ModalProps } from "@/components/Modal";
 import { Select } from "@/components/Select";
 import {
-  Account,
   Category,
+  Payment,
   PaymentMethod,
   PaymentStatus,
   Tag,
@@ -16,13 +16,12 @@ import { paymentMethodsOptions } from "../../utils/paymentMethods";
 import { DateTime } from "luxon";
 import "./_style.scss";
 import { Switch } from "@/components/Switch";
-import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
 import { useTags } from "@/hooks/swrHooks/useTags";
+import { numberToCurrency } from "@/utils/formatters";
 
-export interface IPaymentForm {
+export interface IUpdatePaymentForm {
   description: string;
-  account: Account;
   isOutcome: boolean;
   value: string;
   category: Category;
@@ -33,7 +32,7 @@ export interface IPaymentForm {
   tags: Tag[];
 }
 
-const defaultCategoryForm: Partial<IPaymentForm> = {
+const defaultPaymentForm: Partial<IUpdatePaymentForm> = {
   description: "",
   isOutcome: true,
   category: undefined,
@@ -41,11 +40,12 @@ const defaultCategoryForm: Partial<IPaymentForm> = {
   paymentMethod: PaymentMethod.Credit,
   status: PaymentStatus.Paid,
   tags: [],
-  value: "0",
+  value: "0,00",
 };
 
 interface IProps extends Pick<ModalProps, "visible" | "onClose"> {
-  onSubmit: (form: IPaymentForm) => Promise<unknown>;
+  onSubmit: (form: IUpdatePaymentForm) => Promise<unknown>;
+  defaultValues?: Payment;
 }
 
 const formatInputDateToISO = (value: string) => {
@@ -56,30 +56,40 @@ const formatISOToInputDate = (iso: string) => {
   return DateTime.fromISO(iso).toFormat("yyyy-MM-dd'T'HH:mm") || "";
 };
 
-export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
-  const accounts = useAccounts();
+export const ModalUpdatePayment = ({
+  onClose,
+  visible,
+  onSubmit,
+  defaultValues,
+}: IProps) => {
+  const form = useForm<IUpdatePaymentForm>({
+    defaultValues: defaultPaymentForm,
+  });
 
-  const [createMore, setCreateMore] = useState(false);
-
-  const form = useForm<IPaymentForm>({ defaultValues: defaultCategoryForm });
   useEffect(() => {
     form.reset({
-      ...defaultCategoryForm,
-      paymentDate: new Date().toISOString(),
+      ...defaultPaymentForm,
+      paymentDate: defaultValues?.paymentDate || new Date().toISOString(),
+      category: defaultValues?.category || undefined,
+      description: defaultValues?.description || "",
+      isOutcome: defaultValues?.value ? defaultValues.value < 0 : false,
+      observation: defaultValues?.observation || "",
+      paymentMethod: defaultValues?.paymentMethod || PaymentMethod.Credit,
+      status: defaultValues?.status || PaymentStatus.Paid,
+      tags: defaultValues?.tags || [],
+      value: defaultValues?.value
+        ? numberToCurrency(Math.abs(defaultValues.value))
+        : "0,00",
     });
-  }, [form, visible]);
+  }, [form, visible, defaultValues]);
 
   const [loading, setLoading] = useState(false);
   const innerOnClose = () => (!loading ? onClose() : undefined);
-  const innerOnSubmit = async (fields: IPaymentForm) => {
+  const innerOnSubmit = async (fields: IUpdatePaymentForm) => {
     try {
       setLoading(true);
       await onSubmit(fields);
-      if (!createMore) {
-        onClose();
-      } else {
-        form.reset();
-      }
+      onClose();
     } finally {
       setLoading(false);
     }
@@ -95,31 +105,15 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   return (
     <Modal
-      className="modal create-payment default-header default-footer"
+      className="modal update-payment default-header default-footer"
       onClose={innerOnClose}
       visible={visible}
     >
       <header>
-        <h1 className="title">Registrar pagamento</h1>
+        <h1 className="title">Atualizar pagamento</h1>
       </header>
       <main>
         <form onSubmit={form.handleSubmit(innerOnSubmit)}>
-          <div>
-            <Controller
-              name="account"
-              control={form.control}
-              rules={{ required: "Campo necessário" }}
-              render={({ field, fieldState: { error } }) => (
-                <Select
-                  {...field}
-                  label="Conta"
-                  compareBy={(a, b) => a.id === b.id}
-                  options={accounts.options}
-                  error={error?.message}
-                />
-              )}
-            />
-          </div>
           <div className="price-section">
             <Controller
               name="value"
@@ -281,19 +275,10 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
         >
           Cancelar
         </Button>
-        <div className="right-side">
-          <label>
-            <input
-              onClick={() => setCreateMore((l) => !l)}
-              checked={createMore}
-              type="checkbox"
-            />
-            <span>Criar mais</span>
-          </label>
-          <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
-            Registrar
-          </Button>
-        </div>
+
+        <Button disabled={loading} onClick={form.handleSubmit(innerOnSubmit)}>
+          Salvar
+        </Button>
       </footer>
     </Modal>
   );
