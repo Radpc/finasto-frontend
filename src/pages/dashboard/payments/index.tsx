@@ -76,12 +76,14 @@ interface IFilters {
 }
 
 const hasRecurringPaymentOptions: Option<boolean>[] = [
-  { label: "É parcelado", value: true },
-  { label: "Não é parcelado", value: false },
+  { label: "É recorrente", value: true },
+  { label: "Não é recorrente", value: false },
 ];
 
 export const PagePayments = () => {
   const currentFamily = useRedux((s) => s.session.selectedFamily);
+
+  const [showExtraFilters, setShowExtraFilters] = useState(false);
 
   const [totalItems, setTotalItems] = useState(0);
   const [pagination, setPagination] = useState<IPagination>({
@@ -304,6 +306,16 @@ export const PagePayments = () => {
       <h1>Pagamentos</h1>
       <section className="kpis">
         <KpiPayment
+          label="Total"
+          value={
+            "R$ " +
+            numberToCurrency(
+              (paymentsSumSWR.data?.gain || 0) +
+                (paymentsSumSWR.data?.loss || 0)
+            )
+          }
+        />
+        <KpiPayment
           label="Valor ganho"
           value={"R$ " + numberToCurrency(paymentsSumSWR.data?.gain || 0)}
         />
@@ -312,6 +324,7 @@ export const PagePayments = () => {
           value={"R$ " + numberToCurrency(paymentsSumSWR.data?.loss || 0)}
         />
       </section>
+
       <main>
         <div className="above-table">
           <div className="filters">
@@ -321,7 +334,7 @@ export const PagePayments = () => {
               noError
               label="Buscar"
               placeholder="Digite aqui"
-              className="filter"
+              className="big-search"
             />
             <SelectDatePicker
               label="Período"
@@ -354,106 +367,118 @@ export const PagePayments = () => {
                 }
               }}
             />
-            <Select
-              className="filter"
-              label="Conta"
-              placeholder="Selecione"
-              compareBy={(a, b) => a?.id === b?.id}
-              onChange={(account) => setFilters((f) => ({ ...f, account }))}
-              isSearchable
-              onSearch={(raw) => setRawSearchAccount(raw)}
-              value={filters.account}
-              optionsLoading={accounts.isLoading}
-              options={accounts.options}
-              clearable
-              noError
-            />
-
-            <Select
-              className="filter"
-              label="Categoria"
-              placeholder="Selecione"
-              compareBy={(a, b) => a?.id === b?.id}
-              onChange={(category) => setFilters((f) => ({ ...f, category }))}
-              isSearchable
-              onSearch={(raw) => setRawSearchCategory(raw)}
-              value={filters.category}
-              optionsLoading={categories.isLoading}
-              options={categories.options}
-              clearable
-              noError
-            />
-
-            <Select
-              className="filter"
-              label="Tags"
-              placeholder="Selecione"
-              isMulti
-              compareBy={(a, b) => a?.id === b?.id}
-              onChange={(tags) => setFilters((f) => ({ ...f, tags }))}
-              isSearchable
-              onSearch={(raw) => setRawSearchTag(raw)}
-              value={filters.tags}
-              optionsLoading={tags.isLoading}
-              options={tags.options}
-              clearable
-              noError
-            />
-
-            <Select
-              noError
-              className="filter"
-              label="Tipo de pagamento"
-              placeholder="Selecione"
-              clearable
-              options={paymentDirectionOptions}
-              value={filters.paymentDirection}
-              onChange={(paymentDirection) =>
-                setFilters((f) => ({ ...f, paymentDirection }))
-              }
-            />
-
-            <Select
-              noError
-              className="filter"
-              label="Método de pagamento"
-              placeholder="Selecione"
-              clearable
-              options={paymentMethodsOptions}
-              value={filters.paymentMethod}
-              onChange={(paymentMethod) =>
-                setFilters((f) => ({ ...f, paymentMethod }))
-              }
-            />
-
-            <Select
-              noError
-              className="filter"
-              label="Status"
-              placeholder="Selecione"
-              clearable
-              options={paymentStatusOptions}
-              value={filters.status}
-              onChange={(status) => setFilters((f) => ({ ...f, status }))}
-            />
-
-            <Select
-              noError
-              className="filter"
-              label="Parcelado"
-              placeholder="Selecione"
-              options={hasRecurringPaymentOptions}
-              value={filters.hasRecurringPayment}
-              clearable
-              onChange={(hasRecurringPayment) =>
-                setFilters((f) => ({ ...f, hasRecurringPayment }))
-              }
-            />
+            <span
+              className="more-filters-btn"
+              onClick={() => setShowExtraFilters((l) => !l)}
+            >
+              Mais filtros
+            </span>
           </div>
-
           <Button onClick={() => setModalCreate({ visible: true })}>
             Registrar pagamento
           </Button>
+        </div>
+
+        <div
+          className={
+            "more-filters " + (showExtraFilters ? "showing" : "hiding")
+          }
+        >
+          <Select
+            className="filter"
+            label="Conta"
+            placeholder="Selecione"
+            compareBy={(a, b) => a?.id === b?.id}
+            onChange={(account) => setFilters((f) => ({ ...f, account }))}
+            isSearchable
+            onSearch={(raw) => setRawSearchAccount(raw)}
+            value={filters.account}
+            optionsLoading={accounts.isLoading}
+            options={accounts.options}
+            clearable
+            noError
+          />
+
+          <Select
+            className="filter"
+            label="Categoria"
+            placeholder="Selecione"
+            compareBy={(a, b) => a?.id === b?.id}
+            onChange={(category) => setFilters((f) => ({ ...f, category }))}
+            isSearchable
+            onSearch={(raw) => setRawSearchCategory(raw)}
+            value={filters.category}
+            optionsLoading={categories.isLoading}
+            options={categories.options}
+            clearable
+            noError
+          />
+
+          <Select
+            className="filter"
+            label="Tags"
+            placeholder="Selecione"
+            isMulti
+            compareBy={(a, b) => a?.id === b?.id}
+            onChange={(tags) => setFilters((f) => ({ ...f, tags }))}
+            isSearchable
+            onSearch={(raw) => setRawSearchTag(raw)}
+            value={filters.tags}
+            optionsLoading={tags.isLoading}
+            options={tags.options}
+            clearable
+            noError
+          />
+
+          <Select
+            noError
+            className="filter"
+            label="Balanço do pagamento"
+            placeholder="Selecione"
+            clearable
+            options={paymentDirectionOptions}
+            value={filters.paymentDirection}
+            onChange={(paymentDirection) =>
+              setFilters((f) => ({ ...f, paymentDirection }))
+            }
+          />
+
+          <Select
+            noError
+            className="filter"
+            label="Método de pagamento"
+            placeholder="Selecione"
+            clearable
+            options={paymentMethodsOptions}
+            value={filters.paymentMethod}
+            onChange={(paymentMethod) =>
+              setFilters((f) => ({ ...f, paymentMethod }))
+            }
+          />
+
+          <Select
+            noError
+            className="filter"
+            label="Status"
+            placeholder="Selecione"
+            clearable
+            options={paymentStatusOptions}
+            value={filters.status}
+            onChange={(status) => setFilters((f) => ({ ...f, status }))}
+          />
+
+          <Select
+            noError
+            className="filter"
+            label="Recorrente"
+            placeholder="Selecione"
+            options={hasRecurringPaymentOptions}
+            value={filters.hasRecurringPayment}
+            clearable
+            onChange={(hasRecurringPayment) =>
+              setFilters((f) => ({ ...f, hasRecurringPayment }))
+            }
+          />
         </div>
         <table>
           <thead>
