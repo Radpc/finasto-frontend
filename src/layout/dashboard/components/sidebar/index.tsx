@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./_style.scss";
-import { JSX, useState } from "react";
+import { JSX } from "react";
 
 import CategoryIcon from "@mui/icons-material/Category";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -10,9 +10,12 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import LabelIcon from "@mui/icons-material/Label";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import { useMobile } from "@/hooks/useMobile";
 
 interface IProps {
   className?: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 interface ISidebarOptions {
@@ -54,8 +57,8 @@ const options: ISidebarOptions[] = [
   },
 ];
 
-export const Sidebar = ({ className }: IProps) => {
-  const [open, setOpen] = useState<boolean>(true);
+export const Sidebar = ({ className, open, setOpen }: IProps) => {
+  const isMobile = useMobile();
 
   return (
     <div
@@ -78,15 +81,17 @@ export const Sidebar = ({ className }: IProps) => {
         ))}
       </nav>
 
-      <button onClick={() => setOpen(!open)}>
-        <p>
-          {open ? (
-            <KeyboardDoubleArrowLeftIcon />
-          ) : (
-            <KeyboardDoubleArrowRightIcon />
-          )}
-        </p>
-      </button>
+      {!isMobile && (
+        <button onClick={() => setOpen(!open)}>
+          <p>
+            {open ? (
+              <KeyboardDoubleArrowLeftIcon />
+            ) : (
+              <KeyboardDoubleArrowRightIcon />
+            )}
+          </p>
+        </button>
+      )}
     </div>
   );
 };

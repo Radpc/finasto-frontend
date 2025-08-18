@@ -46,6 +46,8 @@ import {
   ModalUpdatePayment,
 } from "./components/modalUpdatePayment";
 import { ModalRemovePayment } from "./components/modalRemovePayment";
+import { useMobile } from "@/hooks/useMobile";
+import AddIcon from "@mui/icons-material/Add";
 
 interface IPagination {
   page: number;
@@ -95,6 +97,8 @@ export const PagePayments = () => {
     since: DateTime.now().startOf("month").toISO(),
     until: DateTime.now().endOf("month").toISO(),
   });
+
+  const isMobile = useMobile();
 
   const datepickerSince = useMemo(() => {
     if (filters.since) {
@@ -303,7 +307,14 @@ export const PagePayments = () => {
           onClose={() => setModalVisualize((l) => ({ ...l, visible: false }))}
         />
       )}
-      <h1>Pagamentos</h1>
+      <div className="header">
+        <h1>Pagamentos</h1>
+        {isMobile && (
+          <Button onClick={() => setModalCreate({ visible: true })}>
+            <AddIcon />
+          </Button>
+        )}
+      </div>
       <section className="kpis">
         <KpiPayment
           label="Total"
@@ -374,9 +385,12 @@ export const PagePayments = () => {
               Mais filtros
             </span>
           </div>
-          <Button onClick={() => setModalCreate({ visible: true })}>
-            Registrar pagamento
-          </Button>
+
+          {!isMobile && (
+            <Button onClick={() => setModalCreate({ visible: true })}>
+              Registrar pagamento
+            </Button>
+          )}
         </div>
 
         <div

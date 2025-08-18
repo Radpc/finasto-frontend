@@ -7,15 +7,28 @@ import { useDispatch } from "react-redux";
 import { setSelectedFamily, unsetSession } from "@/storage/slices/session";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/Button";
+import { useMobile } from "@/hooks/useMobile";
+import ReorderIcon from "@mui/icons-material/Reorder";
 interface IProps {
   user: User;
   className?: string;
+  setOpen: (open: boolean) => void;
+  open: boolean;
 }
 
-export const Topbar = ({ className }: IProps) => {
+export const Topbar = ({ className, setOpen, open }: IProps) => {
+  const isMobile = useMobile();
   return (
     <div className={"component topbar " + (className ?? "")}>
-      <div className="left-side"></div>
+      <div className="left-side">
+        {isMobile && (
+          <button onClick={() => setOpen(!open)}>
+            <p>
+              <ReorderIcon />
+            </p>
+          </button>
+        )}
+      </div>
       <div className="right-side">
         <FamilySelector />
         <UserDropdown />

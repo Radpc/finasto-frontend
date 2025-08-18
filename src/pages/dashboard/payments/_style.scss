@@ -4,6 +4,13 @@
   .kpis {
     display: flex;
     gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   main {
@@ -24,7 +31,7 @@
         flex-wrap: wrap;
 
         .big-search {
-          width: 30rem;
+          width: 100%;
         }
 
         .more-filters-btn {

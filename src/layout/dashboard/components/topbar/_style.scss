@@ -32,3 +32,20 @@ $topbar-bg: colors.$primary-2;
 
 .component.user-dropdown {
 }
+
+button {
+  background: none;
+  border: none;
+
+  display: flex;
+  justify-content: end;
+
+  p {
+    color: colors.$neutral-1;
+    width: 2rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
