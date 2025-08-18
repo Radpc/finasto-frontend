@@ -73,6 +73,11 @@ export const Sidebar = ({ className, open, setOpen }: IProps) => {
               key={option.path}
               to={option.path}
               className={open ? "open" : "closed"}
+              onClick={() => {
+                if (isMobile) {
+                  setOpen(false);
+                }
+              }}
             >
               {option.icon}
               {open ? option.label : ""}
