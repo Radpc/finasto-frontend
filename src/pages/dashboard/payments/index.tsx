@@ -494,119 +494,122 @@ export const PagePayments = () => {
             }
           />
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th>Categoria</th>
-              <th>Tags</th>
-              <th>Status</th>
-              <th>Data do pagamento</th>
-              <th>Adicionado em</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paymentsSWR.isLoading ? (
-              <LoadingLines lines={10} length={8} />
-            ) : paymentsSWR.error ? (
-              <ErrorTable colSpan={8} />
-            ) : !paymentsSWR.data ? (
-              <EmptyTable colSpan={8} />
-            ) : (
-              paymentsSWR.data.map((p) => (
-                <tr key={"payment_" + p.id}>
-                  <td>
-                    <span className="description">
-                      {p.recurringPayment && (
-                        <InfoHover from={<SvgSync />}>
-                          {p.observation}{" "}
-                          {p.recurringPayment.totalValue
-                            ? "- R$ " +
-                              numberToCurrency(
-                                Math.abs(p.recurringPayment.totalValue)
-                              )
-                            : ""}
-                        </InfoHover>
-                      )}
-                      <span>{p.description}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <div className="price-label">
-                      <SvgChevronDown
-                        className={p.value < 0 ? "red" : "green"}
-                      />
-                      <span>R$ {numberToCurrency(Math.abs(p.value))}</span>
-                    </div>
-                  </td>
-                  <td>{p.category?.label}</td>
-                  <td>
-                    {!p.tags || p.tags.length === 0 ? (
-                      <span>Sem tags</span>
-                    ) : (
-                      p.tags?.map((t) => (
-                        <PaymentTagLabel
-                          tag={t}
-                          key={"t_" + p.id + "_" + t.id}
+        <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+          <table>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Categoria</th>
+                <th>Tags</th>
+                <th>Status</th>
+                <th>Data do pagamento</th>
+                <th>Adicionado em</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paymentsSWR.isLoading ? (
+                <LoadingLines lines={10} length={8} />
+              ) : paymentsSWR.error ? (
+                <ErrorTable colSpan={8} />
+              ) : !paymentsSWR.data ? (
+                <EmptyTable colSpan={8} />
+              ) : (
+                paymentsSWR.data.map((p) => (
+                  <tr key={"payment_" + p.id}>
+                    <td>
+                      <span className="description">
+                        {p.recurringPayment && (
+                          <InfoHover from={<SvgSync />}>
+                            {p.observation}{" "}
+                            {p.recurringPayment.totalValue
+                              ? "- R$ " +
+                                numberToCurrency(
+                                  Math.abs(p.recurringPayment.totalValue)
+                                )
+                              : ""}
+                          </InfoHover>
+                        )}
+                        <span>{p.description}</span>
+                      </span>
+                    </td>
+                    <td>
+                      <div className="price-label">
+                        <SvgChevronDown
+                          className={p.value < 0 ? "red" : "green"}
                         />
-                      ))
-                    )}
-                  </td>
-
-                  <td>
-                    <PaymentStatusTag tag={p.status} />
-                  </td>
-                  <td>
-                    <div className="text-and-icon">
-                      <SvgCalendar />
-                      <span>{formatDate(p.paymentDate)}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-and-icon">
-                      <SvgCalendar />
-                      <span>{formatDate(p.createdAt)}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <Dropdown
-                      buttons
-                      from={(props) => (
-                        <button className="btn-dropdown" {...props}>
-                          <SvgOptionDots />
-                        </button>
+                        <span>R$ {numberToCurrency(Math.abs(p.value))}</span>
+                      </div>
+                    </td>
+                    <td>{p.category?.label}</td>
+                    <td>
+                      {!p.tags || p.tags.length === 0 ? (
+                        <span>Sem tags</span>
+                      ) : (
+                        p.tags?.map((t) => (
+                          <PaymentTagLabel
+                            tag={t}
+                            key={"t_" + p.id + "_" + t.id}
+                          />
+                        ))
                       )}
-                    >
-                      <button
-                        onClick={() =>
-                          setModalVisualize({ visible: true, payment: p })
-                        }
+                    </td>
+
+                    <td>
+                      <PaymentStatusTag tag={p.status} />
+                    </td>
+                    <td>
+                      <div className="text-and-icon">
+                        <SvgCalendar />
+                        <span>{formatDate(p.paymentDate)}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="text-and-icon">
+                        <SvgCalendar />
+                        <span>{formatDate(p.createdAt)}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <Dropdown
+                        buttons
+                        from={(props) => (
+                          <button className="btn-dropdown" {...props}>
+                            <SvgOptionDots />
+                          </button>
+                        )}
                       >
-                        Visualizar
-                      </button>
-                      <button
-                        onClick={() => {
-                          setModalUpdate({ visible: true, payment: p });
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => {
-                          setModalRemove({ visible: true, payment: p });
-                        }}
-                      >
-                        Excluir
-                      </button>
-                    </Dropdown>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                        <button
+                          onClick={() =>
+                            setModalVisualize({ visible: true, payment: p })
+                          }
+                        >
+                          Visualizar
+                        </button>
+                        <button
+                          onClick={() => {
+                            setModalUpdate({ visible: true, payment: p });
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => {
+                            setModalRemove({ visible: true, payment: p });
+                          }}
+                        >
+                          Excluir
+                        </button>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
         <Pagination
           currentPage={pagination.page}
           totalPages={Math.ceil(totalItems / pagination.pageSize)}

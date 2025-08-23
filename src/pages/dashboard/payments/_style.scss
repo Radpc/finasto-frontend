@@ -130,6 +130,12 @@
       }
     }
   }
+
+  @media screen and (max-width: 550px) {
+    .kpis {
+      flex-direction: column;
+    }
+  }
 }
 
 .component.payment-tag-label {
