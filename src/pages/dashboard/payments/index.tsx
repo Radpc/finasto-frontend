@@ -48,6 +48,7 @@ import {
 import { ModalRemovePayment } from "./components/modalRemovePayment";
 import { useMobile } from "@/hooks/useMobile";
 import AddIcon from "@mui/icons-material/Add";
+import { MobileCardPayment } from "./components/mobileCardPayment";
 
 interface IPagination {
   page: number;
@@ -608,6 +609,20 @@ export const PagePayments = () => {
               )}
             </tbody>
           </table>
+        </div>
+        <div className="cards">
+          {paymentsSWR.data?.map((p) => {
+            return (
+              <div key={p.id}>
+                <MobileCardPayment
+                  data={p}
+                  setModalVisualize={setModalVisualize}
+                  setModalUpdate={setModalUpdate}
+                  setModalRemove={setModalRemove}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <Pagination

@@ -39,6 +39,10 @@
           text-decoration: underline;
           cursor: pointer;
         }
+
+        @media screen and (max-width: 460px) {
+          padding-inline: 0.3rem;
+        }
       }
     }
 
@@ -127,6 +131,31 @@
         svg {
           margin: 0;
         }
+      }
+    }
+
+    .cards {
+      width: 100%;
+      gap: 1rem;
+      padding-inline: 0.5rem;
+      padding-block: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    @media screen and (min-width: 460px) {
+      .cards {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 460px) {
+      table {
+        display: none;
+      }
+
+      .cards {
+        display: flex;
+        flex-direction: column;
       }
     }
   }
