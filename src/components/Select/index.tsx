@@ -155,7 +155,7 @@ const Select = React.forwardRef(
     useEffect(() => {
       setSearchValue("");
       if (showMenu && searchRef.current) {
-        searchRef.current.focus();
+        setTimeout(() => searchRef.current.focus());
       }
     }, [showMenu]);
 
@@ -528,6 +528,7 @@ const Select = React.forwardRef(
       showMenu,
       onOptionClick,
       isMulti,
+      isSearchable,
     ]);
 
     const onSelectBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {

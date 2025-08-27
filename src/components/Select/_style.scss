@@ -252,7 +252,7 @@ $background-color: colors.$neutral-1;
       text-overflow: ellipsis;
 
       &.selected {
-        background-color: colors.$primary-1;
+        background-color: rgba(colors.$primary-1, 0.6);
         color: colors.$neutral-1;
 
         &:has(.checkbox-team) {
@@ -271,7 +271,8 @@ $background-color: colors.$neutral-1;
       }
 
       &.highlighted {
-        background-color: red;
+        background-color: colors.$primary-1;
+        font-weight: bold;
       }
 
       .checkbox-team {

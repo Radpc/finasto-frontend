@@ -8,7 +8,7 @@ import React, {
 import ReactDOM from "react-dom";
 import "./_style.scss";
 import { CSSTransition } from "react-transition-group";
-import { FocusTrap } from "focus-trap-react";
+import FocusLock from "react-focus-lock";
 
 export interface ModalProps {
   children?: React.ReactNode;
@@ -73,7 +73,7 @@ const Modal = forwardRef<ModalReference, ModalProps>(
         unmountOnExit
         timeout={200}
       >
-        <FocusTrap>
+        <FocusLock>
           <div
             ref={modalRef}
             role="button"
@@ -98,7 +98,7 @@ const Modal = forwardRef<ModalReference, ModalProps>(
               {children}
             </div>
           </div>
-        </FocusTrap>
+        </FocusLock>
       </CSSTransition>,
       document.getElementById("root") as HTMLElement
     );
