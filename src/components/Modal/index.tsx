@@ -8,6 +8,7 @@ import React, {
 import ReactDOM from "react-dom";
 import "./_style.scss";
 import { CSSTransition } from "react-transition-group";
+import { FocusTrap } from "focus-trap-react";
 
 export interface ModalProps {
   children?: React.ReactNode;
@@ -72,30 +73,32 @@ const Modal = forwardRef<ModalReference, ModalProps>(
         unmountOnExit
         timeout={200}
       >
-        <div
-          ref={modalRef}
-          role="button"
-          tabIndex={0}
-          onKeyUp={({ key }) => (key === "Escape" ? innerOnClose() : null)}
-          className={
-            "component modal " +
-            (side ? "side " : "") +
-            (componentClassName ?? "")
-          }
-          onClick={(e) =>
-            e.target === e.currentTarget ? innerOnClose() : null
-          }
-        >
+        <FocusTrap>
           <div
+            ref={modalRef}
+            role="button"
+            tabIndex={0}
+            onKeyUp={({ key }) => (key === "Escape" ? innerOnClose() : null)}
             className={
-              "modal-structure " +
-              (custom ? "" : "default-modal ") +
-              (className ?? "")
+              "component modal " +
+              (side ? "side " : "") +
+              (componentClassName ?? "")
+            }
+            onClick={(e) =>
+              e.target === e.currentTarget ? innerOnClose() : null
             }
           >
-            {children}
+            <div
+              className={
+                "modal-structure " +
+                (custom ? "" : "default-modal ") +
+                (className ?? "")
+              }
+            >
+              {children}
+            </div>
           </div>
-        </div>
+        </FocusTrap>
       </CSSTransition>,
       document.getElementById("root") as HTMLElement
     );
