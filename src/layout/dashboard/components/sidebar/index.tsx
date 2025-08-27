@@ -67,10 +67,10 @@ export const Sidebar = ({ className, open, setOpen }: IProps) => {
       }
     >
       <nav>
-        {options.map((option) => (
+        {options.map((option, i) => (
           <div>
             <Link
-              key={option.path}
+              key={option.path + "_" + i}
               to={option.path}
               className={open ? "open" : "closed"}
               onClick={() => {

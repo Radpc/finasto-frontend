@@ -10,10 +10,10 @@ $background-color: colors.$neutral-1;
   font-size: 0.9rem;
   position: relative;
 
-  &:has(:focus) {
-    .select-input {
-      outline: none;
-    }
+  &:focus,
+  &.is-open {
+    outline: none;
+
     .select-label {
       color: colors.$primary-1;
     }
@@ -71,16 +71,6 @@ $background-color: colors.$neutral-1;
       circle {
         fill: colors.$error;
       }
-    }
-  }
-
-  &:has(.dropdown) {
-    .select-label {
-      color: colors.$primary-1;
-    }
-
-    .select-input {
-      border-color: colors.$primary-1;
     }
   }
 
@@ -248,11 +238,6 @@ $background-color: colors.$neutral-1;
       }
     }
 
-    &:not(* > :hover) > .option:first-child:not(.selected) {
-      background-color: colors.$neutral-2;
-      color: colors.$primary-1;
-    }
-
     .option {
       padding: 0.4rem 0.4rem;
       cursor: pointer;
@@ -266,6 +251,16 @@ $background-color: colors.$neutral-1;
       overflow: hidden;
       text-overflow: ellipsis;
 
+      &.selected {
+        background-color: colors.$primary-1;
+        color: colors.$neutral-1;
+
+        &:has(.checkbox-team) {
+          background-color: rgba(colors.$primary-1, 0.05);
+          color: colors.$neutral-5;
+        }
+      }
+
       &:hover:not(.selected) {
         background-color: rgba(colors.$primary-1, 0.1);
       }
@@ -273,6 +268,10 @@ $background-color: colors.$neutral-1;
       &.disabled {
         opacity: 0.3;
         pointer-events: none;
+      }
+
+      &.highlighted {
+        background-color: red;
       }
 
       .checkbox-team {
@@ -293,16 +292,6 @@ $background-color: colors.$neutral-1;
           font-weight: 500;
         }
       }
-    }
-  }
-
-  .option.selected {
-    background-color: colors.$primary-1;
-    color: colors.$neutral-1;
-
-    &:has(.checkbox-team) {
-      background-color: rgba(colors.$primary-1, 0.05);
-      color: colors.$neutral-5;
     }
   }
 

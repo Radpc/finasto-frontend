@@ -37,7 +37,9 @@ export const MobileCardPayment = ({
             {data.tags?.length ? (
               <div className="tags">
                 {data.tags?.map((t) => (
-                  <span className="tag">{t.label}</span>
+                  <span key={"tag_" + t.id} className="tag">
+                    {t.label}
+                  </span>
                 ))}
               </div>
             ) : (

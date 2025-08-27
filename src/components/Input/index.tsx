@@ -52,26 +52,16 @@ const Input = React.forwardRef<HTMLInputElement, IProps>(
   ) => {
     const currencyInputRef = useRef<HTMLInputElement>(null);
 
-    const moveCursorToEnd = () => {
-      const el = currencyInputRef.current;
-      if (el) {
-        const len = el.value.length;
-        el.setSelectionRange(len, len);
-      }
-    };
-
     const handleCurrencyChange: React.ChangeEventHandler<HTMLInputElement> = (
       e
     ) => {
       props.onChange?.(e);
-      setTimeout(moveCursorToEnd, 0);
     };
 
     const handleCurrencyFocus: React.FocusEventHandler<HTMLInputElement> = (
       e
     ) => {
       props.onFocus?.(e);
-      setTimeout(moveCursorToEnd, 0);
     };
 
     return (
@@ -95,7 +85,6 @@ const Input = React.forwardRef<HTMLInputElement, IProps>(
                 format={currencyFormatter}
                 value={props.value as number}
                 onChange={handleCurrencyChange}
-                onClick={moveCursorToEnd}
                 maxLength={props.maxLength}
                 onBlur={props.onBlur}
                 placeholder={placeholder}

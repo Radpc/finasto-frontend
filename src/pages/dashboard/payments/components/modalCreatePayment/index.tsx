@@ -95,6 +95,13 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
 
   const isOutcomeWatch = form.watch("isOutcome");
 
+  useEffect(() => {
+    if (visible)
+      setTimeout(() => {
+        form.setFocus("account");
+      });
+  }, [form, visible]);
+
   return (
     <Modal
       className="modal create-payment default-header default-footer"

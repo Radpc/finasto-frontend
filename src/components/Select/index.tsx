@@ -116,10 +116,10 @@ const Select = React.forwardRef(
     useImperativeHandle(ref, () => {
       return {
         focus() {
-          inputRef.current?.focus();
+          containerRef.current?.focus();
         },
         blur() {
-          inputRef.current?.blur();
+          containerRef.current?.blur();
         },
       } as unknown as HTMLDivElement;
     });
@@ -285,11 +285,14 @@ const Select = React.forwardRef(
       }
     };
 
-    const removeSelected = (valueToRemove: T): SelectedValue<T, IsMulti> => {
-      return (selectedValue as T[]).filter(
-        (o) => !compareValues(o, valueToRemove)
-      ) as SelectedValue<T, IsMulti>;
-    };
+    const removeSelected = useCallback(
+      (valueToRemove: T): SelectedValue<T, IsMulti> => {
+        return (selectedValue as T[]).filter(
+          (o) => !compareValues(o, valueToRemove)
+        ) as SelectedValue<T, IsMulti>;
+      },
+      [compareValues, selectedValue]
+    );
 
     const clearSelection = () => {
       const newSelected = (isMulti ? [] : null) as never;
@@ -322,41 +325,44 @@ const Select = React.forwardRef(
       );
     };
 
-    const onOptionClick = (option: Option<T>) => {
-      const isArray = Array.isArray(selectedValue);
-      let newSelected;
+    const onOptionClick = useCallback(
+      (option: Option<T>) => {
+        const isArray = Array.isArray(selectedValue);
+        let newSelected;
 
-      if (isArray) {
-        if (selectedValue.some((o) => compareValues(o, option.value))) {
-          newSelected = removeSelected(option.value);
-          setCachedOptions(
-            (oldOptions) =>
-              (oldOptions as Option<T>[]).filter(
-                (o) => !compareValues(o.value, option.value)
-              ) as unknown as SelectedOption<T, IsMulti>
-          );
+        if (isArray) {
+          if (selectedValue.some((o) => compareValues(o, option.value))) {
+            newSelected = removeSelected(option.value);
+            setCachedOptions(
+              (oldOptions) =>
+                (oldOptions as Option<T>[]).filter(
+                  (o) => !compareValues(o.value, option.value)
+                ) as unknown as SelectedOption<T, IsMulti>
+            );
+          } else {
+            newSelected = [...selectedValue, option.value];
+            setCachedOptions(
+              (oldOptions) =>
+                [
+                  ...(oldOptions as Option<T>[]),
+                  option,
+                ] as unknown as SelectedOption<T, IsMulti>
+            );
+          }
         } else {
-          newSelected = [...selectedValue, option.value];
-          setCachedOptions(
-            (oldOptions) =>
-              [
-                ...(oldOptions as Option<T>[]),
-                option,
-              ] as unknown as SelectedOption<T, IsMulti>
-          );
+          newSelected = option.value;
+          setCachedOptions(option as SelectedOption<T, IsMulti>);
         }
-      } else {
-        newSelected = option.value;
-        setCachedOptions(option as SelectedOption<T, IsMulti>);
-      }
 
-      if (!isMulti) {
-        setShowMenu(false);
-      }
+        if (!isMulti) {
+          setShowMenu(false);
+        }
 
-      setSelectedValue(newSelected as SelectedValue<T, IsMulti>);
-      onChange?.(newSelected as SelectedValue<T, IsMulti>);
-    };
+        setSelectedValue(newSelected as SelectedValue<T, IsMulti>);
+        onChange?.(newSelected as SelectedValue<T, IsMulti>);
+      },
+      [compareValues, isMulti, onChange, removeSelected, selectedValue]
+    );
 
     const isSelected = (option: Option<T>) => {
       const isArray = Array.isArray(selectedValue);
@@ -391,7 +397,7 @@ const Select = React.forwardRef(
           );
         }
       });
-    }, [options, searchValue]);
+    }, [onSearch, options, searchValue]);
 
     const direction = useMemo(() => {
       const spaceBelow =
@@ -401,14 +407,6 @@ const Select = React.forwardRef(
         ? SelectDirection.Down
         : SelectDirection.Up;
     }, [showMenu, dropdownHeight]);
-
-    const onSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && visibleOptions.length > 0) {
-        onOptionClick(visibleOptions[0]);
-        setSearchValue("");
-        // setShowMenu(false);
-      }
-    };
 
     const measuredRef = useCallback((node: HTMLDivElement) => {
       if (node !== null) {
@@ -455,15 +453,115 @@ const Select = React.forwardRef(
       selectedValue,
     ]);
 
+    // Accessibility
+    const [highlightedOptionIndex, setHighlighterOptionIndex] = useState(0);
+    const optionsContainerRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      if (showMenu) {
+        const optionsElements =
+          optionsContainerRef.current?.getElementsByClassName("option");
+        const optionElement = optionsElements?.item(highlightedOptionIndex);
+        optionElement?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
+      }
+    }, [highlightedOptionIndex, showMenu]);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      setHighlighterOptionIndex(0);
+    }, [showMenu, options]);
+
+    useEffect(() => {
+      const containerElem = containerRef.current;
+      const searchElem = searchRef.current;
+      const handler = (elem: HTMLElement) => (e: KeyboardEvent) => {
+        if (e.target !== elem) return;
+        switch (e.code) {
+          case "Enter":
+            if (!isMulti || !showMenu) setShowMenu((l) => !l);
+            if (showMenu) {
+              onOptionClick(visibleOptions[highlightedOptionIndex]);
+              if (isSearchable) {
+                searchRef.current?.focus();
+              } else {
+                containerRef.current?.focus();
+              }
+            }
+            break;
+          case "ArrowUp":
+          case "ArrowDown": {
+            if (!showMenu) {
+              setShowMenu(true);
+              break;
+            }
+            const newValue =
+              highlightedOptionIndex + (e.code === "ArrowDown" ? 1 : -1);
+            if (newValue >= 0 && newValue < (visibleOptions?.length || 0)) {
+              setHighlighterOptionIndex(newValue);
+            }
+            break;
+          }
+        }
+      };
+
+      const selectHandler = containerElem ? handler(containerElem) : null;
+      const searchHandler = searchElem ? handler(searchElem) : null;
+
+      if (selectHandler)
+        containerElem?.addEventListener("keydown", selectHandler);
+
+      if (searchHandler) searchElem?.addEventListener("keydown", searchHandler);
+
+      return () => {
+        if (selectHandler)
+          containerElem?.removeEventListener("keydown", selectHandler);
+
+        if (searchHandler)
+          searchElem?.removeEventListener("keydown", searchHandler);
+      };
+    }, [
+      highlightedOptionIndex,
+      visibleOptions,
+      showMenu,
+      onOptionClick,
+      isMulti,
+    ]);
+
+    const onSelectBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
+      const relatedElem = e.relatedTarget;
+
+      if (
+        relatedElem !== containerRef.current &&
+        relatedElem !== searchRef.current
+      ) {
+        setShowMenu(false);
+      }
+    };
+
+    const onSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Tab") {
+        setShowMenu(false);
+        containerRef.current?.focus();
+      }
+    };
+
     return (
       <div
+        tabIndex={0}
+        role="button"
         className={
           "component-select " +
           (disabled ? "unavailable  " : "") +
           (error ? "error  " : "") +
           ("direction-" + direction + " ") +
-          (className ?? "")
+          (className ?? "") +
+          (showMenu ? "is-open" : "")
         }
+        ref={containerRef}
+        onBlur={onSelectBlur}
       >
         {label && (
           <span className="select-label">
@@ -471,14 +569,7 @@ const Select = React.forwardRef(
             {required ? <span className="asterisk">*</span> : ""}
           </span>
         )}
-        <div
-          tabIndex={0}
-          role="button"
-          onKeyUp={(e) => e.key === "Enter" && handleInputClick()}
-          ref={inputRef}
-          onClick={handleInputClick}
-          className={"select-input "}
-        >
+        <div ref={inputRef} onClick={handleInputClick} className="select-input">
           <div className="content-input">
             {preppend}
             {getDisplay()}
@@ -515,7 +606,7 @@ const Select = React.forwardRef(
               {isSearchable && (
                 <div className="search-box">
                   <input
-                    onKeyUp={onSearchKeyPress}
+                    onKeyDown={onSearchKeyDown}
                     placeholder="Pesquisar"
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => setSearchValue(e.target.value)}
@@ -536,12 +627,10 @@ const Select = React.forwardRef(
                 </div>
               )}
 
-              <div className="options">
+              <div ref={optionsContainerRef} className="options">
                 {visibleOptions.length > 0 ? (
                   visibleOptions.map((option, index) => (
                     <div
-                      tabIndex={index + 1}
-                      role="button"
                       onClick={(e) => {
                         if (hasCheckbox) {
                           e.stopPropagation();
@@ -553,7 +642,8 @@ const Select = React.forwardRef(
                       key={`${index}_${option.label?.toString() || ""}`}
                       className={
                         `option ${isSelected(option) ? "selected" : ""} ` +
-                        (option.disabled ? "disabled" : "")
+                        (option.disabled ? "disabled" : "") +
+                        (index === highlightedOptionIndex ? " highlighted" : "")
                       }
                     >
                       {hasCheckbox ? (
