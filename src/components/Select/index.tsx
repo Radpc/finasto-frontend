@@ -469,6 +469,12 @@ const Select = React.forwardRef(
       const handler = (elem: HTMLElement) => (e: KeyboardEvent) => {
         if (e.target !== elem) return;
         switch (e.code) {
+          case "Backspace":
+            if (clearable && (!isSearchable || !showMenu)) clearSelection();
+            break;
+          case "Escape":
+            setShowMenu(false);
+            break;
           case "Enter":
             if (!isMulti || !showMenu) setShowMenu((l) => !l);
             if (showMenu) {
