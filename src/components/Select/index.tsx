@@ -113,17 +113,6 @@ const Select = React.forwardRef(
     );
     const inputRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
 
-    useImperativeHandle(ref, () => {
-      return {
-        focus() {
-          containerRef.current?.focus();
-        },
-        blur() {
-          containerRef.current?.blur();
-        },
-      } as unknown as HTMLDivElement;
-    });
-
     const searchDebounce = useDebounce(searchValue);
 
     const debouncingSearch = useMemo(
@@ -484,11 +473,7 @@ const Select = React.forwardRef(
             if (!isMulti || !showMenu) setShowMenu((l) => !l);
             if (showMenu) {
               onOptionClick(visibleOptions[highlightedOptionIndex]);
-              if (isSearchable) {
-                searchRef.current?.focus();
-              } else {
-                containerRef.current?.focus();
-              }
+              if (!isMulti) containerRef.current?.focus();
             }
             break;
           case "ArrowUp":
@@ -533,7 +518,6 @@ const Select = React.forwardRef(
 
     const onSelectBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
       const relatedElem = e.relatedTarget;
-
       if (
         relatedElem !== containerRef.current &&
         relatedElem !== searchRef.current
@@ -632,6 +616,7 @@ const Select = React.forwardRef(
                 {visibleOptions.length > 0 ? (
                   visibleOptions.map((option, index) => (
                     <div
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={(e) => {
                         if (hasCheckbox) {
                           e.stopPropagation();
