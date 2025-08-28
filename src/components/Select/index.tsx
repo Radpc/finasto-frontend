@@ -542,8 +542,8 @@ const Select = React.forwardRef(
           (disabled ? "unavailable  " : "") +
           (error ? "error  " : "") +
           ("direction-" + direction + " ") +
-          (className ?? "") +
-          (showMenu ? "is-open" : "")
+          (showMenu ? "is-open " : "") +
+          (className ?? "")
         }
         ref={containerRef}
         onBlur={onSelectBlur}
