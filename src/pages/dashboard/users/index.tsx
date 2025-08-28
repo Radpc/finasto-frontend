@@ -78,7 +78,7 @@ export const PageUsers = () => {
         Criar usuário
       </Button>
       <main>
-        <table>
+        <table className="default-table">
           <thead>
             <tr>
               <th>ID</th>

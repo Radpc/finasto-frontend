@@ -75,7 +75,7 @@ export const PageTags = () => {
         Criar tag
       </Button>
       <main>
-        <table>
+        <table className="default-table">
           <thead>
             <tr>
               <th>ID</th>

@@ -1,0 +1,93 @@
+@use "/src/scss/colors" as colors;
+.modal.visualize-recurring-payment {
+  width: 25rem;
+
+  .component.payment-card {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid colors.$neutral-2;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.3rem;
+    align-items: center;
+
+    .left-side {
+      display: flex;
+      flex-direction: column;
+
+      .date {
+        font-size: 0.6rem;
+      }
+
+      .value {
+        font-weight: bold;
+        font-size: 1rem;
+      }
+    }
+
+    .right-side {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+
+  > main {
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      border-bottom: 1px solid colors.$neutral-9;
+    }
+
+    section.general {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      border: 1px solid colors.$neutral-9;
+      padding: 0.5rem;
+      border-radius: 0.3rem;
+
+      .line {
+        display: flex;
+        gap: 0.5rem;
+
+        .team {
+          display: flex;
+          flex-direction: column;
+
+          &.width-defined {
+            width: 6rem;
+          }
+
+          .title {
+            font-size: 0.6rem;
+          }
+
+          .value {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: colors.$neutral-6;
+          }
+        }
+      }
+    }
+
+    section.payments {
+      display: flex;
+      flex-direction: column;
+
+      .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-height: 10rem;
+        overflow: auto;
+      }
+
+      .pagination {
+        margin-top: 1rem;
+        align-self: center;
+      }
+    }
+  }
+}

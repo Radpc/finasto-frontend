@@ -82,7 +82,7 @@ export const PageCategories = () => {
         Create category
       </Button>
       <main>
-        <table>
+        <table className="default-table">
           <thead>
             <tr>
               <th>ID</th>

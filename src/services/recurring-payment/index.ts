@@ -11,6 +11,12 @@ interface IListRecurringPaymentsParams {
 }
 
 export class RecurringPaymentService {
+  static getRecurringPayment(recurringPaymentId: string) {
+    const url = "/recurring-payments/" + recurringPaymentId;
+    type Response = ControllerResponse<RecurringPayment>;
+    return API.get<Response>(url, { headers: getAuthorizedHeader() });
+  }
+
   static getRecurringPayments(params: IListRecurringPaymentsParams) {
     const url = "/recurring-payments";
     type Response = ControllerResponse<PaginatedResponse<RecurringPayment>>;

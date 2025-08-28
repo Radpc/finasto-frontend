@@ -3,7 +3,6 @@ import React, {
   Ref,
   useCallback,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -95,7 +94,7 @@ const Select = React.forwardRef(
       optionsDirection,
       headerOnClick,
     }: IProps<T, IsMulti>,
-    ref: React.Ref<HTMLDivElement>
+    _: React.Ref<HTMLDivElement>
   ) => {
     const document = useMemo(() => window.document, []);
 

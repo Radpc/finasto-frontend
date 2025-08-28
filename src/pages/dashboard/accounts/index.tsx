@@ -80,7 +80,7 @@ export const PageAccounts = () => {
         Create account
       </Button>
       <main>
-        <table>
+        <table className="default-table">
           <thead>
             <tr>
               <th>ID</th>

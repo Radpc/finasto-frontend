@@ -8,6 +8,14 @@ import {
 import { Button } from "@/components/Button";
 import { RecurringPaymentService } from "@/services/recurring-payment";
 import { currencyToNumber } from "@/utils/money";
+import "./_style.scss";
+
+import SvgOptionDots from "@/assets/img/icons/OptionDots.svg?react";
+import { Dropdown } from "@/components/Dropdown";
+import { RecurringPayment } from "@/types/apiTypes";
+import { Input } from "@/components/Input";
+import { ModalVisualizeRecurringPayment } from "./components/modalVisualizeRecurringPayment";
+import { formatDate, numberToCurrency } from "@/utils/formatters";
 
 interface IPagination {
   page: number;
@@ -84,6 +92,12 @@ export const PageRecurringPayments = () => {
     }
   };
 
+  // Modals
+  const [modalVisualize, setModalVisualize] = useState({
+    visible: false,
+    recurringPayment: undefined as undefined | RecurringPayment,
+  });
+
   return (
     <div className="page recurring-payments">
       <ModalCreateRecurringPayment
@@ -91,17 +105,37 @@ export const PageRecurringPayments = () => {
         onClose={() => setModalCreate({ visible: false })}
         onSubmit={onCreateRecurringPayment}
       />
-      <h1>Recurring payments</h1>
-      <Button onClick={() => setModalCreate({ visible: true })}>
-        Create recurring payment
-      </Button>
+      {modalVisualize.recurringPayment && (
+        <ModalVisualizeRecurringPayment
+          recurringPayment={modalVisualize.recurringPayment}
+          onClose={() => setModalVisualize((l) => ({ ...l, visible: false }))}
+          visible={modalVisualize.visible}
+        />
+      )}
+      <h1>Pagamentos recorrentes</h1>
+
       <main>
-        <table>
+        <div className="above-table">
+          <div className="filters">
+            <Input
+              noError
+              label="Buscar"
+              placeholder="Digite aqui"
+              className="big-search"
+            />
+          </div>
+          <Button onClick={() => setModalCreate({ visible: true })}>
+            Criar pagamento recorrente
+          </Button>
+        </div>
+        <table className="default-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Label</th>
-              <th>Created at</th>
+              <th>Descrição</th>
+              <th>Valor total</th>
+              <th>Valor individual</th>
+              <th>Parcelas</th>
+              <th>Adicionado em</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -111,23 +145,58 @@ export const PageRecurringPayments = () => {
             ) : recurringPaymentsSWR.error || !recurringPaymentsSWR.data ? (
               <tr>Error</tr>
             ) : (
-              recurringPaymentsSWR.data.map((c) => (
-                <tr key={"recurring_payment" + c.id}>
-                  <td>#{c.id}</td>
-                  <td>{c.description}</td>
-                  <td>{c.createdAt}</td>
-                  <td>Actions</td>
+              recurringPaymentsSWR.data.map((rp) => (
+                <tr key={"recurring_payment" + rp.id}>
+                  <td>{rp.description}</td>
+                  <td>
+                    {rp.totalValue
+                      ? "R$ " + numberToCurrency(Math.abs(rp.totalValue))
+                      : "S/N"}
+                  </td>
+                  <td>
+                    R$ {numberToCurrency(Math.abs(rp.singlePaymentValue))}
+                  </td>
+                  <td>
+                    {rp.numberOfInstallments
+                      ? "x" + rp.numberOfInstallments
+                      : "S/N"}
+                  </td>
+                  <td>{formatDate(rp.createdAt)}</td>
+                  <td>
+                    <Dropdown
+                      buttons
+                      from={(props) => (
+                        <button className="btn-dropdown" {...props}>
+                          <SvgOptionDots />
+                        </button>
+                      )}
+                    >
+                      <button
+                        onClick={() =>
+                          setModalVisualize({
+                            visible: true,
+                            recurringPayment: rp,
+                          })
+                        }
+                      >
+                        Visualizar
+                      </button>
+                      <button disabled>Editar</button>
+                      <button disabled>Excluir</button>
+                    </Dropdown>
+                  </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
+        <Pagination
+          className="pagination"
+          currentPage={pagination.page}
+          totalPages={Math.ceil(totalItems / pagination.pageSize)}
+          onPageClick={(page) => setPagination((l) => ({ ...l, page }))}
+        />
       </main>
-      <Pagination
-        currentPage={pagination.page}
-        totalPages={Math.ceil(totalItems / pagination.pageSize)}
-        onPageClick={(page) => setPagination((l) => ({ ...l, page }))}
-      />
     </div>
   );
 };

@@ -496,7 +496,7 @@ export const PagePayments = () => {
           />
         </div>
         <div style={{ maxWidth: "100%", overflowX: "auto" }}>
-          <table>
+          <table className="default-table">
             <thead>
               <tr>
                 <th>Descrição</th>

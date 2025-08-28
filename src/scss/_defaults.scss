@@ -67,7 +67,7 @@ small.error {
   display: none;
 }
 
-table {
+table.default-table {
   width: 100%;
   font-size: 12px;
   font-weight: 500;
@@ -169,7 +169,7 @@ table {
     }
   }
 }
-table + footer {
+table.default-table + footer {
   box-sizing: border-box;
   align-items: center;
   display: flex;

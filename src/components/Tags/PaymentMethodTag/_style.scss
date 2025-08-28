@@ -1,11 +1,11 @@
 @use "/src/scss/colors" as colors;
-.component.payment-status-tag {
+.component.payment-method-tag {
   display: inline-block;
   background-color: colors.$neutral-2;
   padding: 0.1rem 0.5rem;
   border-radius: 0.5rem;
-  font-weight: 600;
   font-size: 0.6rem;
+  font-weight: 600;
 
   &.paid {
     background-color: colors.$secondary-5;

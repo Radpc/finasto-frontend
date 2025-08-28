@@ -17,6 +17,7 @@ interface IListPaymentsParams {
   tagIds?: string[];
   familyId?: string;
   accountId?: string;
+  recurringPaymentId?: string;
   hasRecurringPayment?: boolean;
   paymentMethod?: PaymentMethod;
 }
