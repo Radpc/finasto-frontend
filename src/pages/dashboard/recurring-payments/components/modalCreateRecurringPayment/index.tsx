@@ -61,8 +61,12 @@ export const ModalCreateRecurringPayment = ({
   onSubmit,
 }: IProps) => {
   const accounts = useAccounts();
-  const categories = useCategories();
-  const tags = useTags();
+
+  const [categorySearch, setCategorySearch] = useState("");
+  const categories = useCategories({ searchBy: categorySearch });
+
+  const [tagSearch, setTagSearch] = useState("");
+  const tags = useTags({ searchBy: tagSearch });
 
   const form = useForm<IRecurringPaymentForm>({
     defaultValues: defaultRecurringPaymentForm,
@@ -175,10 +179,15 @@ export const ModalCreateRecurringPayment = ({
               rules={{ required: "Campo necessário" }}
               render={({ field, fieldState: { error } }) => (
                 <Select
-                  {...field}
-                  label="Categoria"
-                  compareBy={(a, b) => a.id === b.id}
+                  isSearchable
+                  compareBy={(c1, c2) => c1.id === c2.id}
+                  onSearch={(newValue) => setCategorySearch(newValue)}
+                  optionsLoading={categories.isLoading}
                   options={categories.options}
+                  placeholder="Selecione"
+                  label="Categoria"
+                  onChange={field.onChange}
+                  value={field.value}
                   error={error?.message}
                 />
               )}
@@ -239,16 +248,19 @@ export const ModalCreateRecurringPayment = ({
             <Controller
               name="tags"
               control={form.control}
-              render={({ field, fieldState: { error } }) => (
+              render={({ fieldState: { error }, field }) => (
                 <Select
-                  {...field}
-                  isMulti
-                  compareBy={(a, b) => a?.id === b?.id}
                   isSearchable
-                  options={tags.options}
-                  value={field.value}
-                  error={error?.message}
+                  compareBy={(c1, c2) => c1.id === c2.id}
+                  isMulti
+                  placeholder="Selecione"
                   label="Tags"
+                  onChange={field.onChange}
+                  value={field.value}
+                  onSearch={(newSearch) => setTagSearch(newSearch)}
+                  optionsLoading={tags.isLoading}
+                  options={tags.options}
+                  error={error?.message}
                 />
               )}
             />
