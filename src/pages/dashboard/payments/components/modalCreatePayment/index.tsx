@@ -92,6 +92,7 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
           tags: fields.tags,
           value: "",
         });
+        form.setFocus("value");
       }
     } finally {
       setLoading(false);

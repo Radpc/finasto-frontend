@@ -30,6 +30,12 @@
         gap: 0.5rem;
         flex-wrap: wrap;
 
+        .separator-checkbox {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+        }
+
         .big-search {
           width: 20rem;
           @media screen and (max-width: 460px) {
@@ -84,6 +90,23 @@
 
       tr:has(td .price-label svg.green):hover {
         background-color: rgba(colors.$secondary-5, 0.1);
+      }
+
+      tr:has(.date-separator) {
+        td {
+          border-top: 3px solid red;
+          position: relative;
+
+          .date-separator {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background-color: red;
+            color: white;
+            padding: 0 0.3rem;
+            font-size: 0.6rem;
+          }
+        }
       }
 
       td .description {

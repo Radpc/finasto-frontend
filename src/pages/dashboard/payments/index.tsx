@@ -83,6 +83,10 @@ const hasRecurringPaymentOptions: Option<boolean>[] = [
   { label: "Não é recorrente", value: false },
 ];
 
+const differentDay = (date1: string, date2: string) => {
+  return !DateTime.fromISO(date1).hasSame(DateTime.fromISO(date2), "day");
+};
+
 export const PagePayments = () => {
   const currentFamily = useRedux((s) => s.session.selectedFamily);
 
@@ -91,13 +95,15 @@ export const PagePayments = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [pagination, setPagination] = useState<IPagination>({
     page: 1,
-    pageSize: 10,
+    pageSize: 20,
   });
   const [filters, setFilters] = useState<IFilters>({
     searchBy: "",
     since: DateTime.now().startOf("month").toISO(),
     until: DateTime.now().endOf("month").toISO(),
   });
+
+  const [visualizeSeparators, setVisualizeSeparators] = useState(false);
 
   const isMobile = useMobile();
 
@@ -379,12 +385,22 @@ export const PagePayments = () => {
                 }
               }}
             />
+
             <span
               className="more-filters-btn"
               onClick={() => setShowExtraFilters((l) => !l)}
             >
               Mais filtros
             </span>
+
+            <label className="separator-checkbox">
+              <input
+                checked={visualizeSeparators}
+                onClick={() => setVisualizeSeparators((l) => !l)}
+                type="checkbox"
+              />
+              <span>Separar datas</span>
+            </label>
           </div>
 
           {!isMobile && (
@@ -511,15 +527,26 @@ export const PagePayments = () => {
             </thead>
             <tbody>
               {paymentsSWR.isLoading ? (
-                <LoadingLines lines={10} length={8} />
+                <LoadingLines lines={pagination.pageSize} length={8} />
               ) : paymentsSWR.error ? (
                 <ErrorTable colSpan={8} />
               ) : !paymentsSWR.data ? (
                 <EmptyTable colSpan={8} />
               ) : (
-                paymentsSWR.data.map((p) => (
+                paymentsSWR.data.map((p, i, payments) => (
                   <tr key={"payment_" + p.id}>
                     <td>
+                      {visualizeSeparators &&
+                        (!payments?.[i - 1] ||
+                        differentDay(
+                          payments[i - 1].paymentDate,
+                          p.paymentDate
+                        ) ? (
+                          <span className="date-separator">
+                            {formatDate(p.paymentDate)}
+                          </span>
+                        ) : undefined)}
+
                       <span className="description">
                         {p.recurringPayment && (
                           <InfoHover from={<SvgSync />}>
