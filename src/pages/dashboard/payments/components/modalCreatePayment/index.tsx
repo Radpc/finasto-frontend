@@ -80,7 +80,18 @@ export const ModalCreatePayment = ({ onClose, visible, onSubmit }: IProps) => {
       if (!createMore) {
         onClose();
       } else {
-        form.reset({ value: defaultCreatePaymentForm.value });
+        form.reset({
+          account: fields.account,
+          category: fields.category,
+          description: "",
+          isOutcome: fields.isOutcome,
+          observation: "",
+          paymentDate: fields.paymentDate,
+          paymentMethod: fields.paymentMethod,
+          status: fields.status,
+          tags: fields.tags,
+          value: "",
+        });
       }
     } finally {
       setLoading(false);
