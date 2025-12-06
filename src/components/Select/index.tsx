@@ -451,7 +451,7 @@ const Select = React.forwardRef(
         const optionElement = optionsElements?.item(highlightedOptionIndex);
         optionElement?.scrollIntoView({
           behavior: "smooth",
-          block: "center",
+          block: "nearest",
           inline: "nearest",
         });
       }
@@ -520,6 +520,10 @@ const Select = React.forwardRef(
       isMulti,
       isSearchable,
     ]);
+
+    const onSelectFocus = (e: React.FocusEvent<HTMLDivElement, Element>) => {
+      setShowMenu(true);
+    };
 
     const onSelectBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
       const relatedElem = e.relatedTarget;
