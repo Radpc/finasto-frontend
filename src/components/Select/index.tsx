@@ -521,10 +521,6 @@ const Select = React.forwardRef(
       isSearchable,
     ]);
 
-    const onSelectFocus = (e: React.FocusEvent<HTMLDivElement, Element>) => {
-      setShowMenu(true);
-    };
-
     const onSelectBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
       const relatedElem = e.relatedTarget;
       if (
@@ -588,7 +584,7 @@ const Select = React.forwardRef(
             <div
               ref={measuredRef}
               className={
-                "component dropdown " +
+                "component select-dropdown " +
                 (optionsDirection === SelectDirection.Up ||
                 direction === SelectDirection.Up
                   ? "upside "

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "./_style.scss";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface ILoginForm {
   email: string;
@@ -15,22 +17,31 @@ interface ILoginForm {
 export const PageLogin = () => {
   const dispatch = useReduxDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const loginForm = useForm<ILoginForm>({
     defaultValues: { email: "", password: "" },
   });
 
   const onLogin = loginForm.handleSubmit(async (form) => {
-    const {
-      data: {
-        data: { user, jwt },
-      },
-    } = await AuthService.login(form);
-    console.log(user);
-    dispatch(
-      setSession({ accessToken: jwt, user, family: user.families?.[0] })
-    );
-    navigate("/dashboard/categories");
+    setLoading(true);
+    try {
+      const {
+        data: {
+          data: { user, jwt },
+        },
+      } = await AuthService.login(form);
+      dispatch(
+        setSession({ accessToken: jwt, user, family: user.families?.[0] }),
+      );
+      navigate("/dashboard/categories");
+      toast.success("Bem vindo, " + user.name);
+    } catch {
+      toast.error("Usuario e/ou senha incorreto.");
+      console.error("Login failed");
+    } finally {
+      setLoading(false);
+    }
   });
 
   return (
@@ -44,6 +55,7 @@ export const PageLogin = () => {
           render={({ field, fieldState: { error } }) => (
             <Input
               {...field}
+              disabled={loading}
               placeholder="Digite aqui"
               label="E-mail"
               error={error?.message}
@@ -59,13 +71,16 @@ export const PageLogin = () => {
             <Input
               {...field}
               type="password"
+              disabled={loading}
               placeholder="*****"
               label="Senha"
               error={error?.message}
             />
           )}
         />
-        <Button onClick={onLogin}>Entrar</Button>
+        <Button buttonType="submit" disabled={loading} onClick={onLogin}>
+          Entrar
+        </Button>
       </form>
     </div>
   );

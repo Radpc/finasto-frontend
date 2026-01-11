@@ -12,6 +12,7 @@
 
 body {
   height: 100vh;
+  overflow-x:hidden;
   &:has(#root .component.modal) {
     margin: 0;
     height: 100%;
