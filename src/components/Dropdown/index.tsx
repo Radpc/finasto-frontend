@@ -127,7 +127,7 @@ const DropdownMenu = (props: IDropdownMenuProps) => {
 
   return (
     <div
-      onClick={(e) => {
+      onClick={() => {
         if (closeOnClick) onCloseDropdown();
       }}
       className={
