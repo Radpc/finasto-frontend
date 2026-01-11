@@ -58,13 +58,10 @@ export const Dropdown = ({
     };
   }, [dropdownOpen, updateButtonCoords]);
 
-  const handleDropdownToggle = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      updateButtonCoords();
-      setDropdownOpen(true);
-    },
-    [updateButtonCoords],
-  );
+  const handleDropdownToggle = useCallback(() => {
+    updateButtonCoords();
+    setDropdownOpen(true);
+  }, [updateButtonCoords]);
 
   const customButton = from({
     onClick: handleDropdownToggle,
