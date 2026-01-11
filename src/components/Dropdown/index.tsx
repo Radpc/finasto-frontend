@@ -17,6 +17,11 @@ interface IProps {
   buttons?: boolean;
 }
 
+interface Coords {
+  x: number;
+  y: number;
+}
+
 export const Dropdown = ({
   from,
   children,
@@ -26,18 +31,39 @@ export const Dropdown = ({
 }: IProps) => {
   // Dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownHeight, setDropdownHeight] = useState(0);
-  const dropdownRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
   const buttonRef = useRef<HTMLButtonElement>(
     null as unknown as HTMLButtonElement,
   );
 
+  const [buttonCoords, setButtonCoords] = useState<Coords>({ x: 0, y: 0 });
+
+  const updateButtonCoords = useCallback(() => {
+    const rect = buttonRef.current.getBoundingClientRect();
+    const coords = {
+      x: rect.left,
+      y: rect.bottom + window.scrollY,
+    };
+    setButtonCoords(coords);
+  }, [buttonRef]);
+
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.addEventListener("scroll", updateButtonCoords, true);
+      window.addEventListener("resize", updateButtonCoords, true);
+    }
+
+    return () => {
+      document.removeEventListener("scroll", updateButtonCoords, true);
+      window.removeEventListener("resize", updateButtonCoords, true);
+    };
+  }, [dropdownOpen, updateButtonCoords]);
+
   const handleDropdownToggle = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.stopPropagation();
-      setDropdownOpen((prev) => !prev);
+      updateButtonCoords();
+      setDropdownOpen(true);
     },
-    [],
+    [updateButtonCoords],
   );
 
   const customButton = from({
@@ -46,82 +72,74 @@ export const Dropdown = ({
     isOpen: dropdownOpen,
   });
 
-  useOutsideClick(dropdownRef, () => {
-    setDropdownOpen(false);
-  });
-
-  const measuredRef = useCallback((node: HTMLDivElement) => {
-    if (node !== null) {
-      const height = node.getBoundingClientRect().height;
-      setDropdownHeight(height);
-    }
-  }, []);
-
-  const [coords, setCoords] = useState<{
-    left?: number;
-    top?: number;
-    // right?: number;
-    bottom?: number;
-  }>({ left: 0, top: 0, bottom: 0 });
-
-  const updateDropdownCoords = useCallback(() => {
-    const rect = buttonRef.current?.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - (rect?.bottom || 0);
-    const spaceAbove = rect?.top || 0;
-
-    if (rect) {
-      const opensDown = spaceBelow > dropdownHeight || spaceBelow >= spaceAbove;
-      setCoords({
-        left: rect.left,
-        // right: rect.width,
-        top: opensDown ? rect.bottom + window.scrollY + 2 : undefined,
-        bottom: !opensDown
-          ? window.innerHeight - rect.top - window.scrollY + 12
-          : undefined,
-      });
-    }
-  }, [dropdownHeight, buttonRef]);
-
-  useEffect(() => {
-    if (dropdownOpen) {
-      updateDropdownCoords();
-      document.addEventListener("scroll", updateDropdownCoords, true);
-      window.addEventListener("resize", updateDropdownCoords, true);
-    }
-
-    return () => {
-      document.removeEventListener("scroll", updateDropdownCoords, true);
-      window.removeEventListener("resize", updateDropdownCoords, true);
-    };
-  }, [updateDropdownCoords, dropdownOpen]);
-
   return (
-    <div
-      ref={dropdownRef}
-      onClick={() => setDropdownOpen((d) => !d)}
-      className={"component dropdown-team "}
-    >
+    <div className={"component dropdown-team "}>
       {customButton}
       {dropdownOpen &&
         ReactDOM.createPortal(
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              if (closeOnDropdownClick) setDropdownOpen(false);
-            }}
-            className={
-              "component dropdown " +
-              (dropdownOpen ? "" : "hidden ") +
-              (buttons ? "buttons " : "") +
-              (className ?? "")
-            }
-            style={{ ...coords }}
-            ref={measuredRef}
+          <DropdownMenu
+            buttonCoords={buttonCoords}
+            className={className}
+            buttons={buttons}
+            fromElemRef={buttonRef.current!}
+            onCloseDropdown={() => setDropdownOpen(false)}
+            closeOnClick={closeOnDropdownClick}
           >
             {children}
-          </div>,
+          </DropdownMenu>,
           document.getElementById("root") as HTMLElement,
         )}
+    </div>
+  );
+};
+
+interface IDropdownMenuProps {
+  children: React.ReactNode;
+  onCloseDropdown: () => void;
+  fromElemRef: HTMLButtonElement;
+  className?: string;
+  buttons?: boolean;
+  buttonCoords: Coords;
+  closeOnClick?: boolean;
+}
+
+const DropdownMenu = (props: IDropdownMenuProps) => {
+  const {
+    className,
+    closeOnClick,
+    buttonCoords,
+    buttons,
+    children,
+    onCloseDropdown,
+  } = props;
+
+  const dropdownRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
+
+  // const [dropdownHeight, setDropdownHeight] = useState(0);
+
+  // useEffect(() => {
+  //   if (dropdownRef.current !== null) {
+  //     const height = dropdownRef.current.getBoundingClientRect().height;
+  //     setDropdownHeight(height);
+  //   }
+  // }, [dropdownRef]);
+
+  useOutsideClick(dropdownRef, () => {
+    onCloseDropdown();
+  });
+
+  return (
+    <div
+      onClick={(e) => {
+        if (closeOnClick) onCloseDropdown();
+      }}
+      className={
+        "component dropdown " + (buttons ? "buttons " : "") + (className ?? "")
+      }
+      style={{ left: buttonCoords.x, top: buttonCoords.y }}
+      ref={dropdownRef}
+    >
+      {children}
     </div>
   );
 };
