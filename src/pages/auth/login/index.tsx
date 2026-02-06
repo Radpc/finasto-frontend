@@ -46,42 +46,47 @@ export const PageLogin = () => {
 
   return (
     <div className="page login">
-      <form onSubmit={onLogin}>
-        <h1>Finance IO</h1>
-        <Controller
-          name="email"
-          control={loginForm.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              disabled={loading}
-              placeholder="Digite aqui"
-              label="E-mail"
-              error={error?.message}
-            />
-          )}
-        />
+      <img src="../src/assets/img/images/dollars.jpg" />
 
-        <Controller
-          name="password"
-          control={loginForm.control}
-          rules={{ required: "Campo necessário" }}
-          render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              type="password"
-              disabled={loading}
-              placeholder="*****"
-              label="Senha"
-              error={error?.message}
-            />
-          )}
-        />
-        <Button buttonType="submit" disabled={loading} onClick={onLogin}>
-          Entrar
-        </Button>
-      </form>
+      <div className="container ">
+        <form onSubmit={onLogin}>
+          <h1>Finance IO</h1>
+          <Controller
+            name="email"
+            control={loginForm.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field, fieldState: { error } }) => (
+              <Input
+                {...field}
+                disabled={loading}
+                placeholder="Digite aqui"
+                label="E-mail"
+                error={error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={loginForm.control}
+            rules={{ required: "Campo necessário" }}
+            render={({ field, fieldState: { error } }) => (
+              <Input
+                {...field}
+                type="password"
+                disabled={loading}
+                placeholder="*****"
+                label="Senha"
+                error={error?.message}
+              />
+            )}
+          />
+          <Button buttonType="submit" disabled={loading} onClick={onLogin}>
+            Entrar
+          </Button>
+          {/* Lembrar / Cadastrar */}
+        </form>
+      </div>
     </div>
   );
 };

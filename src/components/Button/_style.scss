@@ -17,7 +17,9 @@ $warning: colors.$secondary-2;
   border: 1px solid transparent;
   padding: 0.5rem 1.3rem;
   border-radius: 0.5rem;
-  transition: 0.1s transform ease-in-out, 0.1s opacity ease-in-out;
+  transition:
+    0.1s transform ease-in-out,
+    0.1s opacity ease-in-out;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -26,12 +28,12 @@ $warning: colors.$secondary-2;
 }
 
 .component-button.primary {
-  background-color: $primary;
+  background-color: #b5c7ce; //$primary;
   color: $primary;
   border-color: $primary;
 
   &:hover {
-    background-color: $primary-hovered;
+    background-color: #0b9265; // $primary-hovered;
   }
 
   &:active {
