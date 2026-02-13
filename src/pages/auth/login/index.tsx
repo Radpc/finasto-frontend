@@ -8,6 +8,7 @@ import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import DollarBackground from "@/assets/img/images/dollars.jpg";
 
 interface ILoginForm {
   email: string;
@@ -46,7 +47,7 @@ export const PageLogin = () => {
 
   return (
     <div className="page login">
-      <img src="../src/assets/img/images/dollars.jpg" />
+      <img src={DollarBackground} />
 
       <div className="container ">
         <form onSubmit={onLogin}>
