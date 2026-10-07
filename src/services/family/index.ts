@@ -1,4 +1,4 @@
-import { API, getAuthorizedHeader } from "@/config/api";
+import { API } from "@/config/api";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
 import { Family } from "@/types/apiTypes";
 
@@ -17,7 +17,6 @@ export class FamilyService {
     type Response = ControllerResponse<PaginatedResponse<Family>>;
 
     return API.get<Response>(url, {
-      headers: getAuthorizedHeader(),
       params,
     });
   }
@@ -25,6 +24,6 @@ export class FamilyService {
   static createFamily(payload: ICreateFamily) {
     const url = "/families";
     type Response = ControllerResponse<Family>;
-    return API.post<Response>(url, payload, { headers: getAuthorizedHeader() });
+    return API.post<Response>(url, payload);
   }
 }

@@ -1,4 +1,4 @@
-import { API, getAuthorizedHeader } from "@/config/api";
+import { API } from "@/config/api";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
 import { User } from "@/types/apiTypes";
 
@@ -21,7 +21,6 @@ export class UserService {
     type Response = ControllerResponse<PaginatedResponse<User>>;
 
     return API.get<Response>(url, {
-      headers: getAuthorizedHeader(),
       params,
     });
   }
@@ -29,6 +28,6 @@ export class UserService {
   static createUser(payload: ICreateUser) {
     const url = "/users";
     type Response = ControllerResponse<User>;
-    return API.post<Response>(url, payload, { headers: getAuthorizedHeader() });
+    return API.post<Response>(url, payload);
   }
 }

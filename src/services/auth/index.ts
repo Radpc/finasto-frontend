@@ -19,4 +19,14 @@ export class AuthService {
     const url = "/login";
     return API.post<Response>(url, payload);
   }
+
+  /** The signed-in user and their families. */
+  static me() {
+    interface Response {
+      data: User;
+      message: string;
+    }
+
+    return API.get<Response>("/me");
+  }
 }
