@@ -4,7 +4,8 @@ import { useRedux } from "@/hooks/reduxHooks";
 import { Dropdown } from "@/components/Dropdown";
 import { useFamilies } from "@/hooks/swrHooks/useFamilies";
 import { useDispatch } from "react-redux";
-import { setSelectedFamily, unsetSession } from "@/storage/slices/session";
+import { setSelectedFamily } from "@/storage/slices/session";
+import { useAuthActions } from "@/auth/context";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { useMobile } from "@/hooks/useMobile";
@@ -73,10 +74,10 @@ const FamilySelector = () => {
 
 const UserDropdown = () => {
   const currentSession = useRedux((s) => s.session);
-  const dispatch = useDispatch();
+  const { signOut } = useAuthActions();
   const navigate = useNavigate();
   const onLogout = () => {
-    dispatch(unsetSession());
+    signOut();
     navigate("/auth/login");
   };
 

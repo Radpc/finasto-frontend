@@ -1,4 +1,4 @@
-import { API, getAuthorizedHeader } from "@/config/api";
+import { API } from "@/config/api";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
 import { Tag } from "@/types/apiTypes";
 
@@ -18,7 +18,6 @@ export class TagService {
     type Response = ControllerResponse<PaginatedResponse<Tag>>;
 
     return API.get<Response>(url, {
-      headers: getAuthorizedHeader(),
       params,
     });
   }
@@ -26,6 +25,6 @@ export class TagService {
   static createTag(payload: ICreateTag) {
     const url = "/tags";
     type Response = ControllerResponse<Tag>;
-    return API.post<Response>(url, payload, { headers: getAuthorizedHeader() });
+    return API.post<Response>(url, payload);
   }
 }

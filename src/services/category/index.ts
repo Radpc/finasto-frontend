@@ -1,4 +1,4 @@
-import { API, getAuthorizedHeader } from "@/config/api";
+import { API } from "@/config/api";
 import { ControllerResponse, PaginatedResponse } from "@/types/apiResponses";
 import { Category } from "@/types/apiTypes";
 
@@ -19,7 +19,6 @@ export class CategoryService {
     type Response = ControllerResponse<PaginatedResponse<Category>>;
 
     return API.get<Response>(url, {
-      headers: getAuthorizedHeader(),
       params,
     });
   }
@@ -27,6 +26,6 @@ export class CategoryService {
   static createCategory(payload: ICreateCategory) {
     const url = "/categories";
     type Response = ControllerResponse<Category>;
-    return API.post<Response>(url, payload, { headers: getAuthorizedHeader() });
+    return API.post<Response>(url, payload);
   }
 }

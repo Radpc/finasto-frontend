@@ -12,7 +12,8 @@ const initialState: SessionState = {};
 
 type SessionPayload = PayloadAction<{
   user: User;
-  accessToken: string;
+  // Only for password sign-in; Auth0 tokens stay in the SDK's memory
+  accessToken?: string;
   family?: Family;
 }>;
 type SelectedFamilyPayload = PayloadAction<{ family: Family }>;
