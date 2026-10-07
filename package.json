@@ -1,5 +1,5 @@
 {
-  "name": "finance-io-frontend",
+  "name": "finasto-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -47,6 +49,7 @@
     "sass-embedded": "^1.89.2",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "vitest": "^3.2.7"
   }
 }

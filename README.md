@@ -1,54 +1,49 @@
-# React + TypeScript + Vite
+# Finasto web app
 
-Thiss template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript single-page app for Finasto, a shared household cost-control app. It talks to the [Finasto API](https://github.com/Radpc/finasto-backend).
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Requirements: Node 22 and the API running locally (see the backend README).
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+cp .env.example .env     # points the app at http://localhost:3000
+npm ci
+npm run dev              # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Log in with the backend's demo user (`admin@email.com` / `12345`, created by `npx prisma db seed`). The API allows `http://localhost:5173` through CORS by default.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Vite dev server with hot reload |
+| `npm run build` | Typecheck and build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | ESLint |
+| `npm test` | Unit tests (Vitest) |
+
+## Configuration
+
+| Variable | Description |
+| --- | --- |
+| `VITE_API_BASE_PATH` | Base URL of the API |
+
+Variables prefixed with `VITE_` end up in the public JavaScript bundle. Never put secrets in them.
+
+## Project structure
+
+```
+src/
+  main.tsx          app entry: Redux store, router, toasts
+  router/           routes and login redirects
+  config/api.ts     axios instance; a 401 clears the session
+  storage/          Redux Toolkit store (session) persisted to localStorage
+  services/         one class per API resource
+  hooks/            SWR data hooks and UI hooks
+  components/       shared UI components
+  layout/           auth and dashboard layouts (topbar, sidebar)
+  pages/            screens
+  utils/            formatting and parsing helpers
 ```
