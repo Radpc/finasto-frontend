@@ -41,6 +41,8 @@ export type AppDispatch = typeof store.dispatch;
 
 // Common getters
 export const getAccessToken = () => store.getState().session.accessToken;
+export const getSelectedFamilyId = () =>
+  store.getState().session.selectedFamily?.id;
 export const setTokens = (accessToken: string) =>
   store.dispatch(updateTokens({ accessToken }));
 export const externalUnsetSession = () => store.dispatch(unsetSession());

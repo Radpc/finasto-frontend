@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { useMobile } from "@/hooks/useMobile";
 import ReorderIcon from "@mui/icons-material/Reorder";
+import { mutate } from "swr";
 interface IProps {
   user: User;
   className?: string;
@@ -45,6 +46,8 @@ const FamilySelector = () => {
 
   const selectFamily = (family: Family) => {
     dispatch(setSelectedFamily({ family }));
+    // Every request now carries the new family; refetch what is on screen.
+    mutate(() => true);
   };
 
   return (
