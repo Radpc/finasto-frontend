@@ -26,7 +26,6 @@ import { Option, Select } from "@/components/Select";
 import { useAccounts } from "@/hooks/swrHooks/useAccounts";
 import { useCategories } from "@/hooks/swrHooks/useCategories";
 import { useTags } from "@/hooks/swrHooks/useTags";
-import { useRedux } from "@/hooks/reduxHooks";
 import { SelectDatePicker } from "@/components/SelectDatePicker";
 import { DateTime } from "luxon";
 import { LoadingLines } from "@/components/Skeleton";
@@ -88,7 +87,6 @@ const differentDay = (date1: string, date2: string) => {
 };
 
 export const PagePayments = () => {
-  const currentFamily = useRedux((s) => s.session.selectedFamily);
 
   const [showExtraFilters, setShowExtraFilters] = useState(false);
 
@@ -138,7 +136,6 @@ export const PagePayments = () => {
   const fetchPayments = useCallback(
     async (pagination: IPagination, filters: IFilters) => {
       const { data } = await PaymentService.getPayments({
-        familyId: currentFamily?.id,
         page: pagination.page,
         since: filters.since,
         until: filters.until,
@@ -161,7 +158,7 @@ export const PagePayments = () => {
 
       return res.items;
     },
-    [currentFamily?.id]
+    []
   );
 
   const paymentsSWR = useSWR(paymentsSWRKey, () =>
@@ -175,7 +172,6 @@ export const PagePayments = () => {
   const fetchPaymentsSum = useCallback(
     async (filters: IFilters) => {
       const { data } = await PaymentService.getPaymentSums({
-        familyId: currentFamily?.id,
         since: filters.since,
         until: filters.until,
         searchBy: filters.searchBy,
@@ -195,7 +191,7 @@ export const PagePayments = () => {
 
       return res;
     },
-    [currentFamily?.id]
+    []
   );
 
   const paymentsSumSWR = useSWR(paymentsSumSWRKey, () =>
