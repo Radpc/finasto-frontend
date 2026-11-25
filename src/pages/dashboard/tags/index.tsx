@@ -86,9 +86,13 @@ export const PageTags = () => {
           </thead>
           <tbody>
             {tagsSWR.isLoading ? (
-              <tr>Is loading</tr>
+              <tr>
+                <td colSpan={99}>Is loading</td>
+              </tr>
             ) : tagsSWR.error || !tagsSWR.data ? (
-              <tr>Error</tr>
+              <tr>
+                <td colSpan={99}>Error</td>
+              </tr>
             ) : (
               tagsSWR.data.map((c) => (
                 <tr key={"tag_" + c.id}>

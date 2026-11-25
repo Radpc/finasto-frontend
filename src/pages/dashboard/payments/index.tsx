@@ -237,6 +237,7 @@ export const PagePayments = () => {
         tagIds: form.tags.map((t) => t.id),
       });
       paymentsSWR.mutate();
+      paymentsSumSWR.mutate();
     } catch (err) {
       console.log(err);
       throw err;
@@ -258,6 +259,7 @@ export const PagePayments = () => {
         tagIds: form.tags.map((t) => t.id),
       });
       paymentsSWR.mutate();
+      paymentsSumSWR.mutate();
     } catch (err) {
       console.log(err);
       throw err;
@@ -270,6 +272,7 @@ export const PagePayments = () => {
     try {
       await PaymentService.removePayment(modalRemove.payment.id);
       paymentsSWR.mutate();
+      paymentsSumSWR.mutate();
     } catch (err) {
       console.log(err);
       throw err;

@@ -141,9 +141,13 @@ export const PageRecurringPayments = () => {
           </thead>
           <tbody>
             {recurringPaymentsSWR.isLoading ? (
-              <tr>Is loading</tr>
+              <tr>
+                <td colSpan={99}>Is loading</td>
+              </tr>
             ) : recurringPaymentsSWR.error || !recurringPaymentsSWR.data ? (
-              <tr>Error</tr>
+              <tr>
+                <td colSpan={99}>Error</td>
+              </tr>
             ) : (
               recurringPaymentsSWR.data.map((rp) => (
                 <tr key={"recurring_payment" + rp.id}>
