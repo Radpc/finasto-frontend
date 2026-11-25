@@ -66,7 +66,7 @@ const FamilySelector = () => {
             key={"button_" + f.id}
             disabled={f.id === currentFamily?.id}
           >
-            <input type="radio" checked={f.id === currentFamily?.id} />
+            <input type="radio" checked={f.id === currentFamily?.id} readOnly />
             <span>{f.name}</span>
           </button>
         ))}

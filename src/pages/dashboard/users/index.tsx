@@ -89,9 +89,13 @@ export const PageUsers = () => {
           </thead>
           <tbody>
             {usersSWR.isLoading ? (
-              <tr>Is loading</tr>
+              <tr>
+                <td colSpan={99}>Is loading</td>
+              </tr>
             ) : usersSWR.error || !usersSWR.data ? (
-              <tr>Error</tr>
+              <tr>
+                <td colSpan={99}>Error</td>
+              </tr>
             ) : (
               usersSWR.data.map((c) => (
                 <tr key={"user_" + c.id}>

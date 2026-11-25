@@ -91,9 +91,13 @@ export const PageAccounts = () => {
           </thead>
           <tbody>
             {accountsSWR.isLoading ? (
-              <tr>Is loading</tr>
+              <tr>
+                <td colSpan={99}>Is loading</td>
+              </tr>
             ) : accountsSWR.error || !accountsSWR.data ? (
-              <tr>Error</tr>
+              <tr>
+                <td colSpan={99}>Error</td>
+              </tr>
             ) : (
               accountsSWR.data.map((c) => (
                 <tr key={"account_" + c.id}>

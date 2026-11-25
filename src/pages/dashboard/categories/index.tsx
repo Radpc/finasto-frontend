@@ -93,9 +93,13 @@ export const PageCategories = () => {
           </thead>
           <tbody>
             {categoriesSWR.isLoading ? (
-              <tr>Is loading</tr>
+              <tr>
+                <td colSpan={99}>Is loading</td>
+              </tr>
             ) : categoriesSWR.error || !categoriesSWR.data ? (
-              <tr>Error</tr>
+              <tr>
+                <td colSpan={99}>Error</td>
+              </tr>
             ) : (
               categoriesSWR.data.map((c) => (
                 <tr key={"category_" + c.id}>
